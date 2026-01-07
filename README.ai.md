@@ -74,24 +74,50 @@ Continue to **Step 2**.
 
 ---
 
-## Step 2 — Authenticate with OpenCode CLI
+## Step 2 — Write auth.json (DO NOT use opencode auth login)
 
-Run the authentication command:
+**IMPORTANT:** Do NOT run `opencode auth login` — it is an interactive command that will block. Instead, directly edit the auth.json file.
+
+Target path:
+- **Linux / macOS:** `~/.local/share/opencode/auth.json`
+
+### 2.1 Ensure directory exists
 
 ```bash
-opencode auth login
+mkdir -p ~/.local/share/opencode
 ```
 
-When prompted:
+### 2.2 Read existing auth.json (if exists)
 
-1. Select **other**
-2. Enter provider name: `aicodewith`
-3. Enter the API Key (the one user provided in Step 0)
-4. Press Enter to confirm
+If `auth.json` exists:
+- Read and parse it as JSON.
+- Preserve all existing providers (openai / anthropic / google / others).
+- Only modify or insert the `aicodewith` entry.
 
-After successful authentication, continue to **Step 3**.
+If it does NOT exist:
+- Start from an empty JSON object `{}`.
 
-**Note:** This stores the key in `~/.local/share/opencode/auth.json` automatically. You do NOT need to manually edit this file.
+### 2.3 Write AICodeWith entry
+
+Add or update the `aicodewith` entry with the user's API key:
+
+```json
+{
+  "aicodewith": {
+    "type": "api",
+    "key": "<USER_PROVIDED_API_KEY>"
+  }
+}
+```
+
+**Merge rules:**
+- If `aicodewith` exists → overwrite its `key` field only
+- If `aicodewith` does not exist → add the entire entry
+- **NEVER delete or modify other providers**
+
+After writing, re-read the file to ensure it is valid JSON.
+
+Continue to **Step 3**.
 
 ---
 
@@ -169,9 +195,9 @@ Or in Chinese:
 
 ## Summary of changes
 
-| Action | Description |
-|--------|-------------|
-| `opencode auth login` | Stores AICodeWith API key |
+| File | Description |
+|------|-------------|
+| `~/.local/share/opencode/auth.json` | Stores AICodeWith API key |
 | `~/.config/opencode/opencode.json` | Registers the plugin |
 
 ---
@@ -199,5 +225,6 @@ If the user reports issues:
 1. **NEVER skip Step 0** — Always ask for the API key first
 2. **NEVER fabricate API keys** — Only use what the user provides
 3. **NEVER delete existing config** — Always merge, never overwrite entirely
-4. **ALWAYS verify file writes** — Re-read after writing to confirm valid JSON
-5. **ALWAYS wait for user confirmation** — Don't assume, ask when unclear
+4. **NEVER run interactive commands** — Do NOT run `opencode auth login`, it will block. Edit files directly instead.
+5. **ALWAYS verify file writes** — Re-read after writing to confirm valid JSON
+6. **ALWAYS wait for user confirmation** — Don't assume, ask when unclear
