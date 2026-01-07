@@ -7,8 +7,8 @@ An OpenCode auth plugin for AICodewith
 
 # opencode-aicodewith-auth
 
-**AICodewith authentication plugin for OpenCode.**
-One login → multiple models (GPT, Claude, Gemini) via AICodewith.
+**OpenCode 的 AICodewith 认证插件**
+一次登录 → 多模型可用（GPT、Claude、Gemini）
 
 [![npm version](https://img.shields.io/npm/v/opencode-aicodewith-auth?label=npm&style=flat-square)](https://www.npmjs.com/package/opencode-aicodewith-auth)
 [![npm downloads](https://img.shields.io/npm/dt/opencode-aicodewith-auth?style=flat-square)](https://www.npmjs.com/package/opencode-aicodewith-auth)
@@ -18,21 +18,21 @@ One login → multiple models (GPT, Claude, Gemini) via AICodewith.
 
 ---
 
-## What this does
+## 这是什么
 
-OpenCode supports many providers. This plugin adds **AICodewith** as an auth/provider layer, so you can:
+OpenCode 支持多种 AI 提供商。这个插件把 **AICodewith** 作为统一的认证层，让你可以：
 
-- keep **one** provider config
-- authenticate once
-- select from multiple models inside OpenCode
+- 只维护 **一份** 配置
+- 只认证 **一次**
+- 在 OpenCode 里自由切换多个模型
 
-If your team ships across providers (OpenAI/Anthropic/Google), this keeps setup predictable.
+如果你需要同时用 OpenAI / Anthropic / Google 的模型，这个插件能让配置变得简单可控。
 
 ---
 
-## Supported models
+## 支持的模型
 
-Out of the box, the plugin exposes these model identifiers:
+开箱即用，插件提供以下模型：
 
 - `gpt-5.2-codex`
 - `gpt-5.2`
@@ -40,15 +40,15 @@ Out of the box, the plugin exposes these model identifiers:
 - `claude-opus-4-5-20251101`
 - `gemini-3-pro-high`
 
-> You can extend/override models in `opencode.json` if AICodewith adds more.
+> 如果 AICodewith 后续支持更多模型，你可以在 `opencode.json` 里自行扩展。
 
 ---
 
-## Installation
+## 安装
 
-### For humans
+### 手动安装
 
-Add the plugin to your OpenCode config:
+在你的 OpenCode 配置文件中添加插件：
 
 ```json
 {
@@ -57,60 +57,66 @@ Add the plugin to your OpenCode config:
 }
 ```
 
-Then restart OpenCode.
+然后重启 OpenCode。
 
 ---
 
-### For LLM agents (copy-paste)
+### 让 AI 帮你装（复制粘贴）
 
-Open a fresh session in your coding agent (OpenCode / Claude Code / Cursor / etc.) and paste:
+打开你的 AI 编程助手（OpenCode / Claude Code / Cursor 等），粘贴这句话：
 
 ```
-Install and configure opencode-aicodewith-auth by following the instructions here: https://raw.githubusercontent.com/DaneelOlivaw1/opencode-aicodewith-auth/main/README.ai.md
+帮我安装配置 opencode-aicodewith-auth，按照这个说明操作：https://raw.githubusercontent.com/DaneelOlivaw1/opencode-aicodewith-auth/main/README.ai.md
 ```
 
-The AI will guide you through the entire setup, including API key registration if needed.
+AI 会引导你完成整个安装流程，包括注册获取 API Key（如果你还没有的话）。
 
 ---
 
-## Authentication
+## 认证
 
-### Option A — Environment variable (recommended)
+### 方式 A — 环境变量（推荐）
 
-Set your API key:
+设置你的 API Key：
 
 ```bash
-export AICODEWITH_API_KEY="sk-your-api-key"
+export AICODEWITH_API_KEY="sk-你的密钥"
 ```
 
-To persist it:
+持久化设置：
 
-* **macOS/Linux**: add the export line to `~/.zshrc` or `~/.bashrc`, then restart your terminal
-* **Windows (PowerShell)**:
+* **macOS / Linux**：把上面这行加到 `~/.zshrc` 或 `~/.bashrc`，然后重启终端
+* **Windows (PowerShell)**：
 
   ```powershell
-  setx AICODEWITH_API_KEY "sk-your-api-key"
+  setx AICODEWITH_API_KEY "sk-你的密钥"
   ```
 
 ---
 
-### Option B — OpenCode TUI
+### 方式 B — OpenCode 界面
 
-OpenCode → Auth/Login → choose:
+打开 OpenCode → 认证/登录 → 选择：
 
 **AICodewith API Key**
 
-(If your plugin registers a dedicated auth method, this will appear automatically.)
+插件会自动注册这个认证方式。
 
 ---
 
-## Provider configuration
+### 还没有 API Key？
 
-### Auto-injected (default)
+去 **https://aicodewith.com/** 注册账号，注册后会获得 API Key 和体验额度。
 
-After installation, the plugin will inject an `aicodewith` provider into your OpenCode config automatically.
+---
 
-If you prefer to manage it manually, use this template:
+## Provider 配置
+
+### 自动注入（默认）
+
+安装后，插件会自动在你的 OpenCode 配置中注入 `aicodewith` provider。
+
+如果你想手动管理，可以用这个模板：
 
 ```json
 {
@@ -133,49 +139,48 @@ If you prefer to manage it manually, use this template:
 
 ---
 
-## Usage
+## 使用
 
-Pick a model at launch:
+启动时指定模型：
 
 ```bash
 opencode --model gpt-5.2-codex
 ```
 
-Or switch inside the OpenCode UI.
+或者在 OpenCode 界面里切换模型。
 
 ---
 
-## Troubleshooting
+## 常见问题
 
 ### "Provider not found: aicodewith"
 
-* Confirm the plugin is actually loaded:
-  * check your `opencode.json` has `"plugin": ["opencode-aicodewith-auth"]`
-* restart OpenCode after editing config
+* 确认 `opencode.json` 中有 `"plugin": ["opencode-aicodewith-auth"]`
+* 修改配置后记得重启 OpenCode
 
 ### "Missing env var AICODEWITH_API_KEY"
 
-* run `echo $AICODEWITH_API_KEY` (macOS/Linux) or `echo %AICODEWITH_API_KEY%` (Windows cmd)
-* if you set it in a shell rc file, **restart the terminal**
+* 运行 `echo $AICODEWITH_API_KEY` 检查环境变量是否生效
+* 如果是写在 shell 配置文件里的，**重启终端**
 
-### Requests hit the wrong endpoint
+### 请求打到了错误的地址
 
-* check your `provider.aicodewith.api`
-* make sure it points to your AICodewith API base, not a placeholder
-
----
-
-## Security notes
-
-* Treat `AICODEWITH_API_KEY` like a password.
-* Don't commit keys into git.
-* Prefer OS keychain / CI secrets / env vars.
+* 检查 `provider.aicodewith.api` 配置
+* 确保指向正确的 AICodewith API 地址
 
 ---
 
-## Development
+## 安全提示
 
-Clone and build:
+* 把 `AICODEWITH_API_KEY` 当密码一样保护
+* 不要把 Key 提交到 Git
+* 建议使用系统钥匙串 / CI Secrets / 环境变量
+
+---
+
+## 开发
+
+克隆并构建：
 
 ```bash
 git clone https://github.com/DaneelOlivaw1/opencode-aicodewith-auth.git
@@ -184,13 +189,13 @@ bun install
 bun run build
 ```
 
-Type check:
+类型检查：
 
 ```bash
 bun run typecheck
 ```
 
-Clean:
+清理：
 
 ```bash
 bun run clean
