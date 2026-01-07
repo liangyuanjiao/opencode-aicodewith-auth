@@ -40,7 +40,7 @@ OpenCode 支持多种 AI 提供商。这个插件把 **AICodewith** 作为统一
 - `claude-opus-4-5-20251101`
 - `gemini-3-pro-high`
 
-> 如果 AICodewith 后续支持更多模型，你可以在 `opencode.json` 里自行扩展。
+> AICodewith 后续支持更多模型时，插件也会同步更新。
 
 ---
 
