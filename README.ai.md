@@ -11,11 +11,12 @@ You MUST follow the steps **in order**. DO NOT skip any step.
 
 Ask the user **exactly** this (keep the wording natural, but the meaning must be preserved):
 
-> **"Do you have an AICodeWith API key? If yes, please share it with me. If not, I can guide you to register on the official website where you'll get some free credits to start."**
-
-Or in Chinese:
-
-> **"你现在有没有 AICodeWith 的 API key？如果已经有了，可以直接发给我；如果还没有，我可以引导你去官网注册，注册后会有体验额度。"**
+> **"你现在有没有 AICodeWith 的 API key？"**
+>
+> - 如果已经有了，请直接发给我
+> - 如果还没有，请去 **https://aicodewith.com/** 注册（按住 Command 点击链接可直接跳转），注册后会有免费体验额度
+>
+> 请告诉我你的情况，我会继续帮你配置。
 
 ### Branching rules (IMPORTANT)
 
@@ -27,17 +28,7 @@ Or in Chinese:
 
 ### Case B — User DOES NOT have a key
 
-You MUST guide them to register first. Say:
-
-> "You can register at **https://aicodewith.com/** to get an API key.
-> After registration, you'll receive an API key and some free credits to get started.
-> Once you have the key, share it with me or let me know you're ready, and I'll continue the installation."
-
-Or in Chinese:
-
-> "你可以先去 **https://aicodewith.com/** 注册一个账号。
-> 注册完成后你会拿到一个 AICodeWith 的 API key，而且会有体验额度。
-> 拿到 key 之后，把 key 发我，或者告诉我你已经准备好了，我再继续帮你安装。"
+The link **https://aicodewith.com/** is already provided above. Just wait for the user to register and come back with their key.
 
 **Rules:**
 - DO NOT proceed with installation until the user confirms they have obtained a key.
