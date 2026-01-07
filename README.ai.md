@@ -83,47 +83,24 @@ Continue to **Step 2**.
 
 ---
 
-## Step 2 — Write OpenCode auth.json
+## Step 2 — Authenticate with OpenCode CLI
 
-Target path:
-- **Linux / macOS:** `~/.local/share/opencode/auth.json`
-- **Windows:** `%LOCALAPPDATA%\opencode\auth.json`
-
-### 2.1 Ensure directory exists
+Run the authentication command:
 
 ```bash
-mkdir -p ~/.local/share/opencode
+opencode auth login
 ```
 
-### 2.2 Read existing auth.json (if exists)
+When prompted:
 
-If `auth.json` exists:
-- Read and parse it as JSON.
-- Preserve all existing providers (openai / anthropic / google / others).
-- Only modify or insert the `aicodewith` entry.
+1. Select **other**
+2. Enter provider name: `aicodewith`
+3. Enter the API Key (the one user provided in Step 0)
+4. Press Enter to confirm
 
-If it does NOT exist:
-- Start from an empty JSON object `{}`.
+After successful authentication, continue to **Step 3**.
 
-### 2.3 Merge or write AICodeWith entry
-
-Add or update the `aicodewith` entry:
-
-```json
-{
-  "aicodewith": {
-    "type": "api",
-    "key": "<AICODEWITH_API_KEY>"
-  }
-}
-```
-
-**Merge rules:**
-- If `aicodewith` exists → overwrite its `key` field only
-- If `aicodewith` does not exist → add the entire entry
-- **NEVER delete or modify other providers**
-
-After writing, re-read the file to ensure it is valid JSON.
+**Note:** This stores the key in `~/.local/share/opencode/auth.json` automatically. You do NOT need to manually edit this file.
 
 ---
 
@@ -199,11 +176,11 @@ Or in Chinese:
 
 ---
 
-## Summary of files modified
+## Summary of changes
 
-| File | Purpose |
-|------|---------|
-| `~/.local/share/opencode/auth.json` | Stores AICodeWith API key |
+| Action | Description |
+|--------|-------------|
+| `opencode auth login` | Stores AICodeWith API key |
 | `~/.config/opencode/opencode.json` | Registers the plugin |
 
 ---

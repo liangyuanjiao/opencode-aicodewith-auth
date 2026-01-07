@@ -75,32 +75,18 @@ AI 会引导你完成整个安装流程，包括注册获取 API Key（如果你
 
 ## 认证
 
-### 方式 A — 环境变量（推荐）
-
-设置你的 API Key：
+在终端运行：
 
 ```bash
-export AICODEWITH_API_KEY="sk-你的密钥"
+opencode auth login
 ```
 
-持久化设置：
+按提示操作：
 
-* **macOS / Linux**：把上面这行加到 `~/.zshrc` 或 `~/.bashrc`，然后重启终端
-* **Windows (PowerShell)**：
-
-  ```powershell
-  setx AICODEWITH_API_KEY "sk-你的密钥"
-  ```
-
----
-
-### 方式 B — OpenCode 界面
-
-打开 OpenCode → 认证/登录 → 选择：
-
-**AICodewith API Key**
-
-插件会自动注册这个认证方式。
+1. 选择 **other**
+2. 供应商名称填：`aicodewith`
+3. 输入你的 API Key
+4. 回车完成
 
 ---
 
