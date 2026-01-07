@@ -32,7 +32,7 @@ Then restart OpenCode. The plugin will be automatically installed.
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/user/opencode-aicodewith-auth.git
+git clone https://github.com/DaneelOlivaw1/opencode-aicodewith-auth.git
 cd opencode-aicodewith-auth
 ```
 

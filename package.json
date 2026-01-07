@@ -40,12 +40,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/user/opencode-aicodewith-auth.git"
+    "url": "git+https://github.com/DaneelOlivaw1/opencode-aicodewith-auth.git"
   },
   "bugs": {
-    "url": "https://github.com/user/opencode-aicodewith-auth/issues"
+    "url": "https://github.com/DaneelOlivaw1/opencode-aicodewith-auth/issues"
   },
-  "homepage": "https://github.com/user/opencode-aicodewith-auth#readme",
+  "homepage": "https://github.com/DaneelOlivaw1/opencode-aicodewith-auth#readme",
   "dependencies": {
     "@ai-sdk/anthropic": "2.0.56",
     "@ai-sdk/google": "2.0.49",
