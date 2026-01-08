@@ -6,7 +6,6 @@ import {
   findPluginEntry,
   getLatestVersion,
   updatePinnedVersion,
-  hasOhMyOpencode,
   log,
 } from "./checker"
 import { invalidatePackage } from "./cache"
@@ -15,6 +14,7 @@ import type { AutoUpdateOptions } from "./types"
 
 const DISPLAY_NAME = "AICodewith"
 const SPINNER_FRAMES = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"]
+const STARTUP_TOAST_DELAY = 6000
 
 export function createAutoUpdateHook(ctx: PluginInput, options: AutoUpdateOptions = {}) {
   const { autoUpdate = true, showStartupToast = true } = options
@@ -34,18 +34,21 @@ export function createAutoUpdateHook(ctx: PluginInput, options: AutoUpdateOption
       const cachedVersion = getCachedVersion()
       const localDevVersion = getLocalDevVersion(ctx.directory)
       const displayVersion = localDevVersion ?? cachedVersion ?? "unknown"
-      const omoInstalled = hasOhMyOpencode(ctx.directory)
 
       if (localDevVersion) {
-        if (showStartupToast && !omoInstalled) {
-          showStartupToastWithSpinner(ctx, `${displayVersion} (dev)`, "Local development mode").catch(() => {})
+        if (showStartupToast) {
+          setTimeout(() => {
+            showStartupToastWithSpinner(ctx, `${displayVersion} (dev)`, "Local development mode").catch(() => {})
+          }, STARTUP_TOAST_DELAY)
         }
         log("Local development mode, skipping update check")
         return
       }
 
-      if (showStartupToast && !omoInstalled) {
-        showStartupToastWithSpinner(ctx, displayVersion, "GPT-5.2 · Claude · Gemini").catch(() => {})
+      if (showStartupToast) {
+        setTimeout(() => {
+          showStartupToastWithSpinner(ctx, displayVersion, "GPT-5.2 · Claude · Gemini").catch(() => {})
+        }, STARTUP_TOAST_DELAY)
       }
 
       runBackgroundUpdateCheck(ctx, autoUpdate).catch((err) => {
