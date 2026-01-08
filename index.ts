@@ -31,6 +31,7 @@ import {
   handleSuccessResponse,
   transformRequestForCodex,
 } from "./lib/request/fetch-helpers"
+import { createAutoUpdateHook } from "./lib/hooks/auto-update"
 
 const CODEX_MODEL_PREFIXES = ["gpt-", "codex"]
 const PACKAGE_NAME = "opencode-aicodewith-auth"
@@ -277,12 +278,14 @@ const getOutputTokenLimit = (
   return DEFAULT_OUTPUT_TOKEN_MAX
 }
 
-export const AicodewithCodexAuthPlugin: Plugin = async (_ctx: PluginInput) => {
+export const AicodewithCodexAuthPlugin: Plugin = async (ctx: PluginInput) => {
   await ensureConfigFile().catch((error) => {
     console.warn(
       `[${PACKAGE_NAME}] Failed to update opencode config: ${error instanceof Error ? error.message : error}`,
     )
   })
+
+  const autoUpdateHook = createAutoUpdateHook(ctx, { autoUpdate: true })
 
   const authHook: AuthHook = {
     provider: PROVIDER_ID,
@@ -370,6 +373,7 @@ export const AicodewithCodexAuthPlugin: Plugin = async (_ctx: PluginInput) => {
     config: async (config) => {
       applyProviderConfig(config as Record<string, any>)
     },
+    event: autoUpdateHook.event,
     "chat.params": async (input, output) => {
       if (input.model.providerID !== PROVIDER_ID) return
       if (!input.model.id?.startsWith("claude-")) return
