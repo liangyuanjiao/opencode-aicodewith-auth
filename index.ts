@@ -128,7 +128,7 @@ const applyProviderConfig = (config: Record<string, any>) => {
   )
   const hasIncompleteModels = ALLOWED_MODEL_IDS.some((id) => {
     const model = existingModels[id]
-    return !model || typeof model !== "object" || !model.name
+    return !model || typeof model !== "object" || !model.name || !model.modalities
   })
   if (!next.models || hasExtraModels || hasMissingModels || hasIncompleteModels) {
     next.models = toModelMap(ALLOWED_MODEL_IDS, existingModels)
