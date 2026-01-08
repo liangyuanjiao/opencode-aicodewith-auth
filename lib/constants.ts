@@ -20,6 +20,8 @@ export const USER_AGENT =
   "codex_cli_rs/0.77.0 (Mac OS 26.2.0; arm64) iTerm.app/3.6.6"
 export const ORIGINATOR = "codex_cli_rs"
 
+export const SAVE_RAW_RESPONSE_ENV = "SAVE_RAW_RESPONSE"
+
 export const HEADER_NAMES = {
   AUTHORIZATION: "authorization",
   ORIGINATOR: "originator",

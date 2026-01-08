@@ -32,6 +32,7 @@ import {
   transformRequestForCodex,
 } from "./lib/request/fetch-helpers"
 import { createAutoUpdateHook } from "./lib/hooks/auto-update"
+import { saveRawResponse, SAVE_RAW_RESPONSE_ENABLED } from "./lib/logger"
 import STANDARD_PROVIDER_CONFIG from "./lib/provider-config.json"
 
 const CODEX_MODEL_PREFIXES = ["gpt-", "codex"]
@@ -202,6 +203,19 @@ const isModel = (model: string | undefined, prefix: string) => Boolean(model && 
 const isCodexModel = (model: string | undefined) =>
   Boolean(model && CODEX_MODEL_PREFIXES.some((prefix) => model.startsWith(prefix)))
 
+const saveResponseIfEnabled = async (
+  response: Response,
+  provider: string,
+  metadata: { url: string; model?: string },
+): Promise<Response> => {
+  if (!SAVE_RAW_RESPONSE_ENABLED) return response
+
+  const cloned = response.clone()
+  const body = await cloned.text()
+  saveRawResponse(provider, body, { url: metadata.url, status: response.status, model: metadata.model })
+  return response
+}
+
 const rewriteUrl = (originalUrl: string, baseUrl: string) => {
   const base = new URL(baseUrl)
   const original = new URL(originalUrl)
@@ -331,6 +345,8 @@ export const AicodewithCodexAuthPlugin: Plugin = async (ctx: PluginInput) => {
               headers,
             })
 
+            await saveResponseIfEnabled(response.clone(), "codex", { url: targetUrl, model })
+
             if (!response.ok) {
               return await handleErrorResponse(response)
             }
@@ -342,12 +358,14 @@ export const AicodewithCodexAuthPlugin: Plugin = async (ctx: PluginInput) => {
             const geminiUrl = buildGeminiUrl(originalUrl, isGeminiStreaming)
             const headers = createGeminiHeaders(init, apiKey)
             const requestInit = { ...init, headers }
-            return await fetch(geminiUrl, requestInit)
+            const response = await fetch(geminiUrl, requestInit)
+            return await saveResponseIfEnabled(response, "gemini", { url: geminiUrl, model })
           }
 
           if (isClaudeRequest) {
             const targetUrl = rewriteUrl(originalUrl, AICODEWITH_ANTHROPIC_BASE_URL)
-            return await fetch(targetUrl, init)
+            const response = await fetch(targetUrl, init)
+            return await saveResponseIfEnabled(response, "claude", { url: targetUrl, model })
           }
 
           return await fetch(originalUrl, init)
