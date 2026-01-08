@@ -9,7 +9,7 @@
 
 import type { Plugin, PluginInput, AuthHook, Hooks } from "@opencode-ai/plugin"
 import type { Auth, Provider } from "@opencode-ai/sdk"
-import { mkdir, readFile, writeFile } from "node:fs/promises"
+import { mkdir, readFile, writeFile, access } from "node:fs/promises"
 import path from "node:path"
 import os from "node:os"
 import { createAicodewith as createAicodewithProvider, type AicodewithProviderSettings } from "./provider"
@@ -32,54 +32,68 @@ import {
   transformRequestForCodex,
 } from "./lib/request/fetch-helpers"
 import { createAutoUpdateHook } from "./lib/hooks/auto-update"
+import STANDARD_PROVIDER_CONFIG from "./lib/provider-config.json"
 
 const CODEX_MODEL_PREFIXES = ["gpt-", "codex"]
 const PACKAGE_NAME = "opencode-aicodewith-auth"
-const PROVIDER_NAME = "AICodewith"
 const PLUGIN_ENTRY = import.meta.url
-// Use same extension as current file (*.ts in dev, *.js after build)
 const PROVIDER_EXT = import.meta.url.endsWith(".ts") ? ".ts" : ".js"
 const PROVIDER_NPM = new URL(`./provider${PROVIDER_EXT}`, import.meta.url).href
-const DEFAULT_API = "https://api.openai.com/v1"
-const DEFAULT_ENV = ["AICODEWITH_API_KEY"]
 
 const DEFAULT_OUTPUT_TOKEN_MAX = 32000
-
-const IMAGE_MODALITIES = { input: ["text", "image"], output: ["text"] }
-
-const MODEL_CONFIGS: Record<string, { name: string; modalities: { input: string[]; output: string[] } }> = {
-  "gpt-5.2-codex": { name: "GPT-5.2 Codex", modalities: IMAGE_MODALITIES },
-  "gpt-5.2": { name: "GPT-5.2", modalities: IMAGE_MODALITIES },
-  "claude-sonnet-4-5-20250929": { name: "Claude Sonnet 4.5", modalities: IMAGE_MODALITIES },
-  "claude-opus-4-5-20251101": { name: "Claude Opus 4.5", modalities: IMAGE_MODALITIES },
-  "gemini-3-pro-high": { name: "Gemini 3 Pro", modalities: IMAGE_MODALITIES },
-}
-
-const ALLOWED_MODEL_IDS = Object.keys(MODEL_CONFIGS)
-const ALLOWED_MODEL_SET = new Set(ALLOWED_MODEL_IDS)
 
 const homeDir = process.env.OPENCODE_TEST_HOME || os.homedir()
 const configRoot = process.env.XDG_CONFIG_HOME || path.join(homeDir, ".config")
 const configDir = path.join(configRoot, "opencode")
-const configPath = path.join(configDir, "opencode.json")
+const configPathJson = path.join(configDir, "opencode.json")
+const configPathJsonc = path.join(configDir, "opencode.jsonc")
 
 let ensureConfigPromise: Promise<void> | undefined
 
-const toModelMap = (ids: string[], existing: Record<string, unknown> = {}) =>
-  ids.reduce<Record<string, unknown>>((acc, id) => {
-    const existingConfig = Object.prototype.hasOwnProperty.call(existing, id) ? existing[id] : {}
-    const defaultConfig = MODEL_CONFIGS[id] ?? {}
-    acc[id] = { ...defaultConfig, ...(typeof existingConfig === 'object' ? existingConfig : {}) }
-    return acc
-  }, {})
+const fileExists = async (filePath: string) => {
+  try {
+    await access(filePath)
+    return true
+  } catch {
+    return false
+  }
+}
 
-const readJson = async (filePath: string) => {
+const stripJsonComments = (content: string): string => {
+  return content
+    .replace(/\\"|"(?:\\"|[^"])*"|(\/\/.*|\/\*[\s\S]*?\*\/)/g, (m, g) => (g ? "" : m))
+    .replace(/,(\s*[}\]])/g, "$1")
+}
+
+const readJsonOrJsonc = async (filePath: string) => {
   try {
     const text = await readFile(filePath, "utf-8")
-    return JSON.parse(text) as Record<string, unknown>
+    const stripped = filePath.endsWith(".jsonc") ? stripJsonComments(text) : text
+    return JSON.parse(stripped) as Record<string, unknown>
   } catch {
     return undefined
   }
+}
+
+const deepEqual = (a: unknown, b: unknown): boolean => {
+  if (a === b) return true
+  if (typeof a !== typeof b) return false
+  if (a === null || b === null) return a === b
+  if (typeof a !== "object") return false
+  
+  const aObj = a as Record<string, unknown>
+  const bObj = b as Record<string, unknown>
+  const aKeys = Object.keys(aObj)
+  const bKeys = Object.keys(bObj)
+  
+  if (aKeys.length !== bKeys.length) return false
+  
+  for (const key of aKeys) {
+    if (!Object.prototype.hasOwnProperty.call(bObj, key)) return false
+    if (!deepEqual(aObj[key], bObj[key])) return false
+  }
+  
+  return true
 }
 
 const isPackageEntry = (value: string) =>
@@ -94,49 +108,20 @@ const ensurePluginEntry = (list: unknown) => {
   return hasPlugin ? list : [...list, PLUGIN_ENTRY]
 }
 
+const buildStandardProviderConfig = () => ({
+  ...STANDARD_PROVIDER_CONFIG,
+  npm: PROVIDER_NPM,
+})
+
 const applyProviderConfig = (config: Record<string, any>) => {
   let changed = false
+  
   const providerMap = config.provider && typeof config.provider === "object" ? config.provider : {}
-  const existing = providerMap[PROVIDER_ID] && typeof providerMap[PROVIDER_ID] === "object" ? providerMap[PROVIDER_ID] : {}
-  const existingModels = existing.models && typeof existing.models === "object" ? existing.models : {}
-
-  const next = { ...existing }
-
-  if (!next.name) {
-    next.name = PROVIDER_NAME
-    changed = true
-  }
-
-  if (!Array.isArray(next.env)) {
-    next.env = DEFAULT_ENV
-    changed = true
-  }
-
-  if (!next.npm || (typeof next.npm === "string" && isPackageEntry(next.npm))) {
-    next.npm = PROVIDER_NPM
-    changed = true
-  }
-
-  if (!next.api) {
-    next.api = DEFAULT_API
-    changed = true
-  }
-
-  const hasExtraModels = Object.keys(existingModels).some((id) => !ALLOWED_MODEL_SET.has(id))
-  const hasMissingModels = ALLOWED_MODEL_IDS.some(
-    (id) => !Object.prototype.hasOwnProperty.call(existingModels, id),
-  )
-  const hasIncompleteModels = ALLOWED_MODEL_IDS.some((id) => {
-    const model = existingModels[id]
-    return !model || typeof model !== "object" || !model.name || !model.modalities
-  })
-  if (!next.models || hasExtraModels || hasMissingModels || hasIncompleteModels) {
-    next.models = toModelMap(ALLOWED_MODEL_IDS, existingModels)
-    changed = true
-  }
-
-  providerMap[PROVIDER_ID] = next
-  if (config.provider !== providerMap) {
+  const existingProvider = providerMap[PROVIDER_ID]
+  const standardProvider = buildStandardProviderConfig()
+  
+  if (!deepEqual(existingProvider, standardProvider)) {
+    providerMap[PROVIDER_ID] = standardProvider
     config.provider = providerMap
     changed = true
   }
@@ -153,10 +138,28 @@ const applyProviderConfig = (config: Record<string, any>) => {
 const ensureConfigFile = async () => {
   if (ensureConfigPromise) return ensureConfigPromise
   ensureConfigPromise = (async () => {
-    const config = (await readJson(configPath)) ?? {}
+    const jsoncExists = await fileExists(configPathJsonc)
+    const jsonExists = await fileExists(configPathJson)
+    
+    let configPath: string
+    let config: Record<string, unknown>
+    
+    if (jsoncExists) {
+      configPath = configPathJsonc
+      config = (await readJsonOrJsonc(configPath)) ?? {}
+    } else if (jsonExists) {
+      configPath = configPathJson
+      config = (await readJsonOrJsonc(configPath)) ?? {}
+    } else {
+      configPath = configPathJson
+      config = { "$schema": "https://opencode.ai/config.json" }
+    }
+    
     if (!config || typeof config !== "object") return
+    
     const changed = applyProviderConfig(config)
     if (!changed) return
+    
     await mkdir(configDir, { recursive: true })
     await writeFile(configPath, `${JSON.stringify(config, null, 2)}\n`, "utf-8")
   })()
