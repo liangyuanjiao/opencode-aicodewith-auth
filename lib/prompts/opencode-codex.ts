@@ -1,4 +1,13 @@
 /**
+ * @file opencode-codex.ts
+ * @input  -
+ * @output OpenCode's codex.txt prompt (for filtering duplicate system prompts)
+ * @pos    Prompt fetcher - caches OpenCode's system prompt for comparison
+ *
+ * 📌 On change: Update this header + lib/prompts/ARCHITECTURE.md
+ */
+
+/**
  * OpenCode Codex Prompt Fetcher
  *
  * Fetches and caches the codex.txt system prompt from OpenCode's GitHub repository.

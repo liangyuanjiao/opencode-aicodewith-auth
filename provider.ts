@@ -1,3 +1,12 @@
+/**
+ * @file provider.ts
+ * @input  Provider settings (apiKey, baseURL, headers)
+ * @output Multi-provider language model factory (OpenAI/Anthropic/Google)
+ * @pos    Core provider - routes model requests to appropriate SDK
+ *
+ * 📌 On change: Update this header + README.md file index
+ */
+
 import type { LanguageModelV2 } from "@ai-sdk/provider"
 import { createAnthropic } from "@ai-sdk/anthropic"
 import { createGoogleGenerativeAI } from "@ai-sdk/google"

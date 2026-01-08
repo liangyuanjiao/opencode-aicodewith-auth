@@ -1,4 +1,13 @@
 /**
+ * @file model-map.ts
+ * @input  Config model ID (e.g., "gpt-5.2-codex-high")
+ * @output Normalized API model name (e.g., "gpt-5.2-codex")
+ * @pos    Helper - static model ID mapping for all supported variants
+ *
+ * 📌 On change: Update this header + lib/request/helpers/ARCHITECTURE.md
+ */
+
+/**
  * Model Configuration Map
  *
  * Maps model config IDs to their normalized API model names.

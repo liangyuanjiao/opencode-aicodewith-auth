@@ -1,3 +1,12 @@
+/**
+ * @file index.ts
+ * @input  OpenCode plugin context, auth credentials
+ * @output Auth hook, config injection, fetch interceptor
+ * @pos    Plugin entry point - orchestrates auth and request routing
+ *
+ * 📌 On change: Update this header + README.md file index
+ */
+
 import type { Plugin, PluginInput, AuthHook, Hooks } from "@opencode-ai/plugin"
 import type { Auth, Provider } from "@opencode-ai/sdk"
 import { mkdir, readFile, writeFile } from "node:fs/promises"

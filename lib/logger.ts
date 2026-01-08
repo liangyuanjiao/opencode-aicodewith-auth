@@ -1,3 +1,12 @@
+/**
+ * @file logger.ts
+ * @input  Log stage, data objects
+ * @output File logs (~/.opencode/logs/), console debug output
+ * @pos    Utility - debug/request logging for development
+ *
+ * 📌 On change: Update this header + lib/ARCHITECTURE.md
+ */
+
 import { writeFileSync, mkdirSync, existsSync } from "node:fs"
 import { join } from "node:path"
 import { homedir } from "node:os"

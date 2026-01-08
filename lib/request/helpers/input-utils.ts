@@ -1,3 +1,12 @@
+/**
+ * @file input-utils.ts
+ * @input  InputItem[], cached OpenCode prompt
+ * @output Filtered InputItem[] (OpenCode prompts removed, orphaned outputs fixed)
+ * @pos    Helper - message filtering and tool output normalization
+ *
+ * 📌 On change: Update this header + lib/request/helpers/ARCHITECTURE.md
+ */
+
 import type { InputItem } from "../../types";
 
 const OPENCODE_PROMPT_SIGNATURES = [

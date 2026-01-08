@@ -1,3 +1,12 @@
+/**
+ * @file request-transformer.ts
+ * @input  RequestBody from OpenCode
+ * @output Transformed RequestBody for Codex API
+ * @pos    Core transformation - model normalization, reasoning config, input filtering
+ *
+ * 📌 On change: Update this header + lib/request/ARCHITECTURE.md
+ */
+
 import { logDebug, logWarn } from "../logger"
 import { CODEX_OPENCODE_BRIDGE } from "../prompts/codex-opencode-bridge"
 import { getOpenCodeCodexPrompt } from "../prompts/opencode-codex"

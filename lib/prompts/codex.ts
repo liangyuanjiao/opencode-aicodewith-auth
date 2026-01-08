@@ -1,3 +1,12 @@
+/**
+ * @file codex.ts
+ * @input  Normalized model name
+ * @output Codex system prompt (fetched from GitHub, cached)
+ * @pos    Prompt provider - fetches model-specific instructions from openai/codex repo
+ *
+ * 📌 On change: Update this header + lib/prompts/ARCHITECTURE.md
+ */
+
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs"
 import { homedir } from "node:os"
 import { dirname, join } from "node:path"

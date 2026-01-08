@@ -1,3 +1,12 @@
+/**
+ * @file types.ts
+ * @input  -
+ * @output TypeScript interfaces (RequestBody, InputItem, etc.)
+ * @pos    Foundation - shared type definitions across lib/
+ *
+ * 📌 On change: Update this header + lib/ARCHITECTURE.md
+ */
+
 export interface ConfigOptions {
   reasoningEffort?: "none" | "minimal" | "low" | "medium" | "high" | "xhigh"
   reasoningSummary?: "auto" | "concise" | "detailed" | "off" | "on"

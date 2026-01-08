@@ -1,3 +1,12 @@
+/**
+ * @file fetch-helpers.ts
+ * @input  Raw request, API key, RequestInit
+ * @output Transformed headers, URL extraction, response handlers
+ * @pos    Request layer entry - coordinates transformation and response handling
+ *
+ * 📌 On change: Update this header + lib/request/ARCHITECTURE.md
+ */
+
 import { HEADER_NAMES, ORIGINATOR, USER_AGENT } from "../constants"
 import { logRequest } from "../logger"
 import { getCodexInstructions } from "../prompts/codex"

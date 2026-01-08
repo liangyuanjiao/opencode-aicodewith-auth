@@ -1,3 +1,12 @@
+/**
+ * @file constants.ts
+ * @input  -
+ * @output Global constants (URLs, header names, provider IDs)
+ * @pos    Foundation - imported by most other modules
+ *
+ * 📌 On change: Update this header + lib/ARCHITECTURE.md
+ */
+
 export const PLUGIN_NAME = "opencode-aicodewith-auth"
 export const PROVIDER_ID = "aicodewith"
 export const AUTH_METHOD_LABEL = "AICodewith API Key"

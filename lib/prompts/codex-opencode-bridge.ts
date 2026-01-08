@@ -1,4 +1,13 @@
 /**
+ * @file codex-opencode-bridge.ts
+ * @input  -
+ * @output CODEX_OPENCODE_BRIDGE constant (tool remapping rules)
+ * @pos    Bridge layer - maps Codex tools to OpenCode equivalents
+ *
+ * 📌 On change: Update this header + lib/prompts/ARCHITECTURE.md
+ */
+
+/**
  * Codex-OpenCode Bridge Prompt
  *
  * This prompt bridges Codex CLI instructions to the OpenCode environment.

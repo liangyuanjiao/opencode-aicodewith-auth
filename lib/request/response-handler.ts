@@ -1,3 +1,12 @@
+/**
+ * @file response-handler.ts
+ * @input  SSE Response stream
+ * @output JSON Response (for non-streaming) or passthrough (for streaming)
+ * @pos    Response layer - SSE parsing and content-type handling
+ *
+ * 📌 On change: Update this header + lib/request/ARCHITECTURE.md
+ */
+
 import { PLUGIN_NAME } from "../constants";
 import { logRequest, LOGGING_ENABLED } from "../logger";
 import type { SSEEventData } from "../types";
