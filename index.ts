@@ -35,13 +35,15 @@ const DEFAULT_ENV = ["AICODEWITH_API_KEY"]
 
 const DEFAULT_OUTPUT_TOKEN_MAX = 32000
 
-const ALLOWED_MODEL_IDS = [
-  "gpt-5.2-codex",
-  "gpt-5.2",
-  "claude-sonnet-4-5-20250929",
-  "claude-opus-4-5-20251101",
-  "gemini-3-pro-high",
-]
+const MODEL_CONFIGS: Record<string, { name: string }> = {
+  "gpt-5.2-codex": { name: "GPT-5.2 Codex" },
+  "gpt-5.2": { name: "GPT-5.2" },
+  "claude-sonnet-4-5-20250929": { name: "Claude Sonnet 4.5" },
+  "claude-opus-4-5-20251101": { name: "Claude Opus 4.5" },
+  "gemini-3-pro-high": { name: "Gemini 3 Pro" },
+}
+
+const ALLOWED_MODEL_IDS = Object.keys(MODEL_CONFIGS)
 const ALLOWED_MODEL_SET = new Set(ALLOWED_MODEL_IDS)
 
 const homeDir = process.env.OPENCODE_TEST_HOME || os.homedir()
@@ -53,7 +55,9 @@ let ensureConfigPromise: Promise<void> | undefined
 
 const toModelMap = (ids: string[], existing: Record<string, unknown> = {}) =>
   ids.reduce<Record<string, unknown>>((acc, id) => {
-    acc[id] = Object.prototype.hasOwnProperty.call(existing, id) ? existing[id] : {}
+    const existingConfig = Object.prototype.hasOwnProperty.call(existing, id) ? existing[id] : {}
+    const defaultConfig = MODEL_CONFIGS[id] ?? {}
+    acc[id] = { ...defaultConfig, ...(typeof existingConfig === 'object' ? existingConfig : {}) }
     return acc
   }, {})
 

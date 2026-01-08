@@ -165,21 +165,21 @@ Ensure the `plugin` array includes `opencode-aicodewith-auth`:
 
 ---
 
-## Step 4 — Verify installation
+## Step 4 — Verify installation and check npm registry
 
-Tell the user:
+### 4.1 Check if user is using a non-official npm registry
 
-> "Installation complete! Please restart OpenCode to load the plugin.
-> You can now use any of these models:
-> - `gpt-5.2-codex`
-> - `gpt-5.2`
-> - `claude-sonnet-4-5-20250929`
-> - `claude-opus-4-5-20251101`
-> - `gemini-3-pro-high`
->
-> To test, run: `opencode --model gpt-5.2-codex`"
+Run this command to detect the npm registry:
 
-Or in Chinese:
+```bash
+npm config get registry
+```
+
+If the output is NOT `https://registry.npmjs.org/` (e.g., shows taobao, cnpm, or other mirrors), **remember to include a warning in your final message**.
+
+### 4.2 Tell the user installation is complete
+
+**If using official npm registry** (https://registry.npmjs.org/):
 
 > "安装完成！请重启 OpenCode 以加载插件。
 > 你现在可以使用以下模型：
@@ -190,6 +190,25 @@ Or in Chinese:
 > - `gemini-3-pro-high`
 >
 > 测试命令: `opencode --model gpt-5.2-codex`"
+
+**If using a mirror registry** (taobao, cnpm, etc.), add this warning:
+
+> "安装完成！请重启 OpenCode 以加载插件。
+> 你现在可以使用以下模型：
+> - `gpt-5.2-codex`
+> - `gpt-5.2`
+> - `claude-sonnet-4-5-20250929`
+> - `claude-opus-4-5-20251101`
+> - `gemini-3-pro-high`
+>
+> 测试命令: `opencode --model gpt-5.2-codex`
+>
+> ⚠️ **注意**: 检测到你使用的是非官方 npm 源。如果启动 OpenCode 时遇到插件加载失败（如 `BunInstallFailedError`），可能是镜像源尚未同步最新版本。解决方法：
+> ```bash
+> # 临时使用官方源重新安装
+> npm config set registry https://registry.npmjs.org/
+> # 重启 OpenCode 后，可以改回原来的源
+> ```"
 
 ---
 
@@ -205,6 +224,18 @@ Or in Chinese:
 ## Troubleshooting
 
 If the user reports issues:
+
+### "BunInstallFailedError" or plugin fails to load
+This is usually caused by npm mirror sync delays. The user's npm registry may not have synced the latest version yet.
+
+Tell the user:
+> "这个问题通常是因为你的 npm 镜像源还没有同步最新版本。解决方法：
+> ```bash
+> # 临时切换到官方源
+> npm config set registry https://registry.npmjs.org/
+> # 重启 OpenCode
+> # 之后可以改回原来的源
+> ```"
 
 ### "Provider not found: aicodewith"
 - Verify `opencode.json` contains `"plugin": ["opencode-aicodewith-auth"]`
@@ -228,3 +259,4 @@ If the user reports issues:
 4. **NEVER run interactive commands** — Do NOT run `opencode auth login`, it will block. Edit files directly instead.
 5. **ALWAYS verify file writes** — Re-read after writing to confirm valid JSON
 6. **ALWAYS wait for user confirmation** — Don't assume, ask when unclear
+7. **ALWAYS check npm registry and warn if using mirrors** — Run `npm config get registry` and warn user about potential sync issues if not using official registry

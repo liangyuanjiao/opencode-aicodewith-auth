@@ -199,7 +199,17 @@ bunx oh-my-opencode install --no-tui --claude=no --chatgpt=no --gemini=no
 
 ### Step 5: 验证安装
 
-告诉用户：
+#### 5.1 检查 npm 源
+
+```bash
+npm config get registry
+```
+
+如果输出不是 `https://registry.npmjs.org/`（例如显示 taobao、cnpm 等镜像），需要在最终提示中加入警告。
+
+#### 5.2 告诉用户安装完成
+
+**如果使用官方 npm 源：**
 
 > **"安装完成！🎉"**
 >
@@ -217,6 +227,16 @@ bunx oh-my-opencode install --no-tui --claude=no --chatgpt=no --gemini=no
 > - 输入 `ultrawork` 或 `ulw` 关键词，Sisyphus 会自动编排多个 agents 并行工作
 > - 各个 agent 会自动使用最适合的模型完成任务
 > - 详细功能请参考：https://github.com/code-yeongyu/oh-my-opencode
+
+**如果使用镜像源，额外添加警告：**
+
+> ⚠️ **注意**: 检测到你使用的是非官方 npm 源。如果启动 OpenCode 时遇到插件加载失败（如 `BunInstallFailedError`），可能是镜像源尚未同步最新版本。解决方法：
+> ```bash
+> # 临时切换到官方源
+> npm config set registry https://registry.npmjs.org/
+> # 重启 OpenCode
+> # 之后可以改回原来的源
+> ```
 
 ---
 
@@ -241,10 +261,23 @@ bunx oh-my-opencode install --no-tui --claude=no --chatgpt=no --gemini=no
 5. **ALWAYS verify file writes** — 写入后重新读取确认 JSON 有效
 6. **ALWAYS preserve user settings** — 保留用户现有的所有配置
 7. **Use `bunx` or `npx`** — 如果 bunx 不可用，回退到 npx
+8. **ALWAYS check npm registry and warn if using mirrors** — 运行 `npm config get registry`，如果不是官方源则在最终提示中警告用户可能存在同步问题
 
 ---
 
 ## 故障排查
+
+### "BunInstallFailedError" 或插件加载失败
+
+这通常是因为 npm 镜像源尚未同步最新版本。告诉用户：
+
+> "这个问题通常是因为你的 npm 镜像源还没有同步最新版本。解决方法：
+> ```bash
+> # 临时切换到官方源
+> npm config set registry https://registry.npmjs.org/
+> # 重启 OpenCode
+> # 之后可以改回原来的源
+> ```"
 
 ### "Provider not found: aicodewith"
 - 检查 `opencode.json` 是否包含 `"opencode-aicodewith-auth"`

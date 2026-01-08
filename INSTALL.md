@@ -249,8 +249,17 @@ If it does NOT exist:
 
 ### Step 4: Verify installation
 
-Tell the user:
+**4.1 Check npm registry**
 
+```bash
+npm config get registry
+```
+
+If not `https://registry.npmjs.org/`, include a warning in the final message.
+
+**4.2 Tell the user**
+
+If using official registry:
 > "Installation complete! Please restart OpenCode to load the plugin.
 > You can now use any of these models:
 > - `aicodewith/gpt-5.2-codex`
@@ -260,6 +269,9 @@ Tell the user:
 > - `aicodewith/gemini-3-pro-high`
 >
 > To test, run: `opencode --model aicodewith/gpt-5.2-codex`"
+
+If using mirror registry, add warning:
+> "⚠️ **Note**: You're using a non-official npm registry. If OpenCode fails to load the plugin (e.g., `BunInstallFailedError`), it may be due to mirror sync delays. Fix: temporarily switch to official registry with `npm config set registry https://registry.npmjs.org/`, restart OpenCode, then switch back if needed."
 
 ### Summary of changes
 
@@ -275,6 +287,7 @@ Tell the user:
 3. **NEVER delete existing config** — Always merge, never overwrite
 4. **ALWAYS verify file writes** — Re-read after writing to confirm valid JSON
 5. **ALWAYS wait for user confirmation** — Don't assume, ask when unclear
+6. **ALWAYS check npm registry and warn if using mirrors** — Run `npm config get registry` and warn about potential sync issues
 
 </details>
 
@@ -407,6 +420,18 @@ bunx oh-my-opencode install --no-tui --claude=no --chatgpt=no --gemini=no
 ---
 
 ## 故障排查
+
+### "BunInstallFailedError" 或插件加载失败
+
+这通常是因为 npm 镜像源尚未同步最新版本。告诉用户：
+
+> "这个问题通常是因为你的 npm 镜像源还没有同步最新版本。解决方法：
+> ```bash
+> # 临时切换到官方源
+> npm config set registry https://registry.npmjs.org/
+> # 重启 OpenCode
+> # 之后可以改回原来的源
+> ```"
 
 ### "Provider not found: aicodewith"
 
