@@ -263,6 +263,7 @@ export async function transformRequestBody(
 
   body.model = normalizedModel
   body.stream = true
+  body.store = false
   body.instructions = codexInstructions
 
   if (body.input && Array.isArray(body.input)) {
