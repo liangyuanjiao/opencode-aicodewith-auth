@@ -94,12 +94,11 @@ function applyProviderConfig(config) {
     changed = true;
   }
 
-  const hasExtraModels = Object.keys(existingModels).some((id) => !ALLOWED_MODEL_SET.has(id));
   const hasMissingModels = ALLOWED_MODEL_IDS.some(
     (id) => !Object.prototype.hasOwnProperty.call(existingModels, id),
   );
-  if (!next.models || hasExtraModels || hasMissingModels) {
-    next.models = toModelMap(ALLOWED_MODEL_IDS, existingModels);
+  if (!next.models || hasMissingModels) {
+    next.models = { ...existingModels, ...toModelMap(ALLOWED_MODEL_IDS, existingModels) };
     changed = true;
   }
 
