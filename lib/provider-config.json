@@ -19,6 +19,14 @@
       "name": "Claude Opus 4.5",
       "modalities": { "input": ["text", "image"], "output": ["text"] }
     },
+    "claude-sonnet-4-5-20250929-third-party": {
+      "name": "Claude Sonnet 4.5 (third party)",
+      "modalities": { "input": ["text", "image"], "output": ["text"] }
+    },
+    "claude-opus-4-5-20251101-third-party": {
+      "name": "Claude Opus 4.5 (third party)",
+      "modalities": { "input": ["text", "image"], "output": ["text"] }
+    },
     "gemini-3-pro": {
       "name": "Gemini 3 Pro",
       "modalities": { "input": ["text", "image"], "output": ["text"] }

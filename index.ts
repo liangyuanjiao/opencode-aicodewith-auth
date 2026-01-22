@@ -18,6 +18,7 @@ import {
   CODEX_BASE_URL,
   PROVIDER_ID,
   AICODEWITH_ANTHROPIC_BASE_URL,
+  AICODEWITH_LITE_URL,
   AICODEWITH_GEMINI_BASE_URL,
   GEMINI_API_CLIENT,
   GEMINI_PRIVILEGED_USER_ID_ENV,
@@ -195,6 +196,12 @@ const isGeminiUrl = (url: string) =>
 
 const isClaudeUrl = (url: string) => url.includes("/v1/messages")
 
+const isThirdPartyModel = (model: string | undefined) =>
+  Boolean(model && model.endsWith("-third-party"))
+
+const stripThirdPartySuffix = (model: string) =>
+  model.replace(/-third-party$/, "")
+
 const isModel = (model: string | undefined, prefix: string) => Boolean(model && model.startsWith(prefix))
 
 const isCodexModel = (model: string | undefined) =>
@@ -364,10 +371,22 @@ export const AicodewithCodexAuthPlugin: Plugin = async (ctx: PluginInput) => {
           }
 
           if (isClaudeRequest) {
-            const targetUrl = rewriteUrl(originalUrl, AICODEWITH_ANTHROPIC_BASE_URL)
-            const transformedInit = transformClaudeRequest(init)
+            const isThirdParty = isThirdPartyModel(model)
+            const baseUrl = isThirdParty ? AICODEWITH_LITE_URL : AICODEWITH_ANTHROPIC_BASE_URL
+            const targetUrl = rewriteUrl(originalUrl, baseUrl)
+            
+            let transformedInit = transformClaudeRequest(init)
+            if (isThirdParty && model && transformedInit?.body && typeof transformedInit.body === "string") {
+              try {
+                const body = JSON.parse(transformedInit.body) as Record<string, unknown>
+                body.model = stripThirdPartySuffix(model)
+                transformedInit = { ...transformedInit, body: JSON.stringify(body) }
+              } catch {
+              }
+            }
+            
             const response = await fetch(targetUrl, transformedInit)
-            const savedResponse = await saveResponseIfEnabled(response, "claude", { url: targetUrl, model })
+            const savedResponse = await saveResponseIfEnabled(response, isThirdParty ? "claude-third-party" : "claude", { url: targetUrl, model })
             return transformClaudeResponse(savedResponse)
           }
 
