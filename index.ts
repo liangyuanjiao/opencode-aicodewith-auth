@@ -34,6 +34,7 @@ import {
 } from "./lib/request/fetch-helpers"
 import { transformClaudeRequest, transformClaudeResponse } from "./lib/request/claude-tools-transform"
 import { createAutoUpdateHook } from "./lib/hooks/auto-update"
+import { syncOmoConfig } from "./lib/hooks/omo-config-sync"
 import { saveRawResponse, SAVE_RAW_RESPONSE_ENABLED } from "./lib/logger"
 import STANDARD_PROVIDER_CONFIG from "./lib/provider-config.json"
 
@@ -310,9 +311,12 @@ const getOutputTokenLimit = (
 }
 
 export const AicodewithCodexAuthPlugin: Plugin = async (ctx: PluginInput) => {
-  await ensureConfigFile().catch((error) => {
+  await Promise.all([
+    ensureConfigFile(),
+    syncOmoConfig(),
+  ]).catch((error) => {
     console.warn(
-      `[${PACKAGE_NAME}] Failed to update opencode config: ${error instanceof Error ? error.message : error}`,
+      `[${PACKAGE_NAME}] Failed to update config: ${error instanceof Error ? error.message : error}`,
     )
   })
 
