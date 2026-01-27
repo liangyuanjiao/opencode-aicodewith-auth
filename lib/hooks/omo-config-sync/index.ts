@@ -8,15 +8,72 @@
 import { readFile, writeFile, access } from "node:fs/promises"
 import path from "node:path"
 import os from "node:os"
-import {
-  AGENT_MODEL_MAP,
-  CATEGORY_MODEL_MAP,
-  DEFAULT_CONFIG,
-  DEFAULT_MODEL,
-  OMO_CONFIG_FILENAME,
-} from "./constants"
+import { PROVIDER_ID } from "../../constants"
 
 const PACKAGE_NAME = "opencode-aicodewith-auth"
+const OMO_CONFIG_FILENAME = "oh-my-opencode.json"
+
+// Default fallback model when mapping fails
+const DEFAULT_MODEL = `${PROVIDER_ID}/claude-sonnet-4-5-20250929`
+
+/**
+ * Model mapping rules:
+ * - anthropic/claude-opus-* -> aicodewith/claude-opus-4-5-20251101
+ * - anthropic/claude-sonnet-* -> aicodewith/claude-sonnet-4-5-20250929
+ * - openai/gpt-* or gpt-* -> aicodewith/gpt-5.2
+ * - google/gemini-* or gemini-* -> aicodewith/gemini-3-pro
+ * - Already aicodewith/* -> keep as is
+ * - Unknown -> aicodewith/claude-sonnet-4-5-20250929 (fallback)
+ */
+const mapModelToAicodewith = (model: string): string => {
+  // Already using aicodewith provider
+  if (model.startsWith(`${PROVIDER_ID}/`)) {
+    return model
+  }
+
+  const lowerModel = model.toLowerCase()
+
+  // Claude Opus mapping
+  if (lowerModel.includes("claude-opus") || lowerModel.includes("claude_opus")) {
+    return `${PROVIDER_ID}/claude-opus-4-5-20251101`
+  }
+
+  // Claude Sonnet mapping
+  if (lowerModel.includes("claude-sonnet") || lowerModel.includes("claude_sonnet")) {
+    return `${PROVIDER_ID}/claude-sonnet-4-5-20250929`
+  }
+
+  // Claude Haiku mapping -> use Sonnet as we don't have Haiku
+  if (lowerModel.includes("claude-haiku") || lowerModel.includes("claude_haiku")) {
+    return `${PROVIDER_ID}/claude-sonnet-4-5-20250929`
+  }
+
+  // Generic Claude mapping (default to Sonnet)
+  if (lowerModel.includes("claude")) {
+    return `${PROVIDER_ID}/claude-sonnet-4-5-20250929`
+  }
+
+  // GPT/OpenAI mapping
+  if (
+    lowerModel.includes("gpt-") ||
+    lowerModel.includes("gpt_") ||
+    lowerModel.startsWith("openai/") ||
+    lowerModel.includes("codex")
+  ) {
+    return `${PROVIDER_ID}/gpt-5.2`
+  }
+
+  // Gemini/Google mapping
+  if (
+    lowerModel.includes("gemini") ||
+    lowerModel.startsWith("google/")
+  ) {
+    return `${PROVIDER_ID}/gemini-3-pro`
+  }
+
+  // Fallback to Sonnet
+  return DEFAULT_MODEL
+}
 
 interface OmoAgentConfig {
   model?: string
@@ -54,32 +111,15 @@ const getOmoConfigPath = (): string => {
   return path.join(configRoot, "opencode", OMO_CONFIG_FILENAME)
 }
 
-const getDefaultModelForAgent = (agentName: string): string => {
-  return AGENT_MODEL_MAP[agentName] || DEFAULT_MODEL
-}
-
-const getDefaultModelForCategory = (categoryName: string): string => {
-  return CATEGORY_MODEL_MAP[categoryName] || DEFAULT_MODEL
-}
-
 export const syncOmoConfig = async (): Promise<void> => {
   const configPath = getOmoConfigPath()
 
-  let config: OmoConfig
-
+  // If file doesn't exist, don't create it - let OMO create it first
   if (!(await fileExists(configPath))) {
-    // File doesn't exist - create with default config
-    config = DEFAULT_CONFIG
-    try {
-      await writeFile(configPath, `${JSON.stringify(config, null, 2)}\n`, "utf-8")
-    } catch (error) {
-      console.warn(
-        `[${PACKAGE_NAME}] Failed to create OMO config: ${error instanceof Error ? error.message : error}`
-      )
-    }
     return
   }
 
+  let config: OmoConfig
   try {
     const content = await readFile(configPath, "utf-8")
     config = JSON.parse(content) as OmoConfig
@@ -93,20 +133,28 @@ export const syncOmoConfig = async (): Promise<void> => {
 
   let changed = false
 
+  // Map agent models
   if (config.agents && typeof config.agents === "object") {
-    for (const [agentName, agentConfig] of Object.entries(config.agents)) {
-      if (!agentConfig.model) {
-        agentConfig.model = getDefaultModelForAgent(agentName)
-        changed = true
+    for (const [_agentName, agentConfig] of Object.entries(config.agents)) {
+      if (agentConfig.model && !agentConfig.model.startsWith(`${PROVIDER_ID}/`)) {
+        const mappedModel = mapModelToAicodewith(agentConfig.model)
+        if (mappedModel !== agentConfig.model) {
+          agentConfig.model = mappedModel
+          changed = true
+        }
       }
     }
   }
 
+  // Map category models
   if (config.categories && typeof config.categories === "object") {
-    for (const [categoryName, categoryConfig] of Object.entries(config.categories)) {
-      if (!categoryConfig.model) {
-        categoryConfig.model = getDefaultModelForCategory(categoryName)
-        changed = true
+    for (const [_categoryName, categoryConfig] of Object.entries(config.categories)) {
+      if (categoryConfig.model && !categoryConfig.model.startsWith(`${PROVIDER_ID}/`)) {
+        const mappedModel = mapModelToAicodewith(categoryConfig.model)
+        if (mappedModel !== categoryConfig.model) {
+          categoryConfig.model = mappedModel
+          changed = true
+        }
       }
     }
   }
