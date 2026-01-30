@@ -108,6 +108,29 @@ opencode --model aicodewith/gpt-5.2-codex
 
 ---
 
+## 环境变量
+
+| 变量名 | 默认值 | 说明 |
+|--------|--------|------|
+| `AICODEWITH_DISABLE_OMO_SYNC` | - | 设为 `1` 或 `true` 禁用 oh-my-opencode 配置自动同步 |
+
+### 禁用 OMO 配置同步
+
+插件默认会自动同步 oh-my-opencode 的 agent/category 配置。如果你想完全自定义 OMO 配置，可以禁用此功能：
+
+```bash
+# 在 shell 配置文件中添加（如 ~/.zshrc 或 ~/.bashrc）
+export AICODEWITH_DISABLE_OMO_SYNC=1
+```
+
+或启动时指定：
+
+```bash
+AICODEWITH_DISABLE_OMO_SYNC=1 opencode
+```
+
+---
+
 ## 开发
 
 ```bash

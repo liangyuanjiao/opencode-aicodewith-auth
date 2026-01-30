@@ -27,6 +27,9 @@ const DEFAULT_CONFIG_URL =
 // Fetch timeout in milliseconds
 const FETCH_TIMEOUT_MS = 5000
 
+// Environment variable to disable OMO config sync
+const DISABLE_OMO_SYNC_ENV = "AICODEWITH_DISABLE_OMO_SYNC"
+
 interface OmoAgentConfig {
   model?: string
   temperature?: number
@@ -118,6 +121,11 @@ const syncAgentsAndCategories = (
 }
 
 export const syncOmoConfig = async (): Promise<void> => {
+  // Check if sync is disabled via environment variable
+  if (process.env[DISABLE_OMO_SYNC_ENV] === "1" || process.env[DISABLE_OMO_SYNC_ENV] === "true") {
+    return
+  }
+
   const defaultConfig = await fetchDefaultConfig()
   if (!defaultConfig) {
     return
