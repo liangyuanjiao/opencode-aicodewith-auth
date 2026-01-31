@@ -86,19 +86,18 @@
     },
     "gemini-3-pro": {
       "name": "Gemini 3 Pro",
-      "limit": {
-        "context": 1048576,
-        "output": 65536
-      },
-      "modalities": {
-        "input": [
-          "text",
-          "image"
-        ],
-        "output": [
-          "text"
-        ]
-      }
+      "limit": { "context": 1048576, "output": 65536 },
+      "modalities": { "input": ["text", "image"], "output": ["text"] }
+    },
+    "claude-haiku-4-5-20251001-third-party": {
+      "name": "Claude Haiku 4.5 (third party)",
+      "limit": { "context": 200000, "output": 64000 },
+      "modalities": { "input": ["text", "image"], "output": ["text"] }
+    },
+    "gemini-3-flash-preview": {
+      "name": "Gemini 3 Flash Preview",
+      "limit": { "context": 1048576, "output": 65536 },
+      "modalities": { "input": ["text", "image"], "output": ["text"] }
     }
   }
 }
