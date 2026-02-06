@@ -16,12 +16,13 @@ const DEFAULT_ENV = ["AICODEWITH_API_KEY"];
 const IMAGE_MODALITIES = { input: ["text", "image"], output: ["text"] };
 
 const MODEL_CONFIGS = {
+  "gpt-5.3-codex": { name: "GPT-5.3 Codex", modalities: IMAGE_MODALITIES },
   "gpt-5.2-codex": { name: "GPT-5.2 Codex", modalities: IMAGE_MODALITIES },
   "gpt-5.2": { name: "GPT-5.2", modalities: IMAGE_MODALITIES },
   "claude-sonnet-4-5-20250929": { name: "Claude Sonnet 4.5", modalities: IMAGE_MODALITIES },
-  "claude-opus-4-6-20260205": { name: "Claude Opus 4", modalities: IMAGE_MODALITIES },
+  "claude-opus-4-6-20260205": { name: "Claude Opus 4.6", modalities: IMAGE_MODALITIES },
   "claude-sonnet-4-5-20250929-third-party": { name: "Claude Sonnet 4.5 (third party)", modalities: IMAGE_MODALITIES },
-  "claude-opus-4-6-20260205-third-party": { name: "Claude Opus 4 (third party)", modalities: IMAGE_MODALITIES },
+  "claude-opus-4-6-20260205-third-party": { name: "Claude Opus 4.6 (third party)", modalities: IMAGE_MODALITIES },
   "gemini-3-pro": { name: "Gemini 3 Pro", modalities: IMAGE_MODALITIES },
 };
 

@@ -198,25 +198,27 @@ If the output is NOT `https://registry.npmjs.org/` (e.g., shows taobao, cnpm, or
 
 > "安装完成！请重启 OpenCode 以加载插件。
 > 你现在可以使用以下模型：
+> - `gpt-5.3-codex`
 > - `gpt-5.2-codex`
 > - `gpt-5.2`
 > - `claude-sonnet-4-5-20250929
 > - `claude-opus-4-6-20260205
 > - `gemini-3-pro`
 >
-> 测试命令: `opencode --model gpt-5.2-codex`"
+> 测试命令: `opencode --model gpt-5.3-codex`"
 
 **If using a mirror registry** (taobao, cnpm, etc.), add this warning:
 
 > "安装完成！请重启 OpenCode 以加载插件。
 > 你现在可以使用以下模型：
+> - `gpt-5.3-codex`
 > - `gpt-5.2-codex`
 > - `gpt-5.2`
 > - `claude-sonnet-4-5-20250929
 > - `claude-opus-4-6-20260205
 > - `gemini-3-pro`
 >
-> 测试命令: `opencode --model gpt-5.2-codex`
+> 测试命令: `opencode --model gpt-5.3-codex`
 >
 > ⚠️ **注意**: 检测到你使用的是非官方 npm 源。如果启动 OpenCode 时遇到插件加载失败（如 `BunInstallFailedError`），可能是镜像源尚未同步最新版本。解决方法：
 > ```bash

@@ -31,7 +31,7 @@ prompts/
 
 ```
 getCodexInstructions(model)
-  ├── Determine model family (gpt-5.2-codex, codex, gpt-5.1, etc.)
+  ├── Determine model family (gpt-5.3-codex, gpt-5.2-codex, codex, gpt-5.1, etc.)
   ├── Check cache (15min TTL)
   ├── Fetch from GitHub with ETag
   └── Return prompt (or fallback)

@@ -27,7 +27,7 @@ export const SAVE_RAW_RESPONSE_ENV = "SAVE_RAW_RESPONSE"
  * Format: YYYYMMDD date suffix
  */
 export const CLAUDE_VERSIONS = {
-  opus: "20260205",      // Claude Opus 4
+  opus: "20260205",      // Claude Opus 4.6
   sonnet: "20250929",    // Claude Sonnet 4.5
   haiku: "20251001",     // Claude Haiku 4.5
 } as const
@@ -46,7 +46,7 @@ export const CLAUDE_GENERATIONS = {
  */
 export const GPT_VERSIONS = {
   base: "5.2",           // GPT-5.2
-  codex: "5.2",          // GPT-5.2 Codex
+  codex: "5.3",          // GPT-5.3 Codex
 } as const
 
 /**

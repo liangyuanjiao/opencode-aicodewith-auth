@@ -29,6 +29,7 @@ scripts/
 4. Writes back only if changes were made
 
 **Model Display Names:**
+- `gpt-5.3-codex` → "GPT-5.3 Codex"
 - `gpt-5.2-codex` → "GPT-5.2 Codex"
 - `claude-sonnet-4-5-20250929 → "Claude Sonnet 4.5"
 - etc.

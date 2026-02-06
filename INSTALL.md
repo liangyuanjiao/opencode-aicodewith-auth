@@ -38,10 +38,11 @@ OpenCode 支持多种 AI 提供商。这个插件使用 **AICodewith** 作为统
 
 | 模型 ID | 说明 |
 |---------|------|
+| `aicodewith/gpt-5.3-codex` | GPT-5.3 代码优化版 |
 | `aicodewith/gpt-5.2-codex` | GPT-5.2 代码优化版 |
 | `aicodewith/gpt-5.2` | 最新 GPT-5.2 |
 | `aicodewith/claude-sonnet-4-5-20250929` | Claude Sonnet 4.5 |
-| `aicodewith/claude-opus-4-6-20260205` | Claude Opus 4 |
+| `aicodewith/claude-opus-4-6-20260205` | Claude Opus 4.6 |
 | `aicodewith/gemini-3-pro` | Gemini 3 Pro |
 
 > AICodewith 后续支持更多模型时,插件也会同步更新。
