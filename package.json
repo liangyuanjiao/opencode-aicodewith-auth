@@ -19,10 +19,14 @@
     "dist"
   ],
   "scripts": {
-    "build": "bun build index.ts provider.ts --outdir dist --target bun --format esm --external @ai-sdk/anthropic --external @ai-sdk/google --external @ai-sdk/openai --external @ai-sdk/provider --external @ai-sdk/provider-utils --external @opencode-ai/plugin --external @opencode-ai/sdk",
+    "build": "bun run generate:config && bun build index.ts provider.ts --outdir dist --target bun --format esm --external @ai-sdk/anthropic --external @ai-sdk/google --external @ai-sdk/openai --external @ai-sdk/provider --external @ai-sdk/provider-utils --external @opencode-ai/plugin --external @opencode-ai/sdk",
     "clean": "rm -rf dist",
+    "generate:config": "bun scripts/generate-provider-config.ts && bun scripts/generate-omo-config.ts",
     "prepublishOnly": "bun run clean && bun run build",
     "typecheck": "bunx tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
     "postinstall": "bun ./scripts/install-opencode-aicodewith.js"
   },
   "keywords": [
@@ -58,6 +62,7 @@
   },
   "devDependencies": {
     "@types/node": "^22.19.8",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18"
   }
 }
