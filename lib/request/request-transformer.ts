@@ -18,7 +18,7 @@ import {
 import type { ConfigOptions, InputItem, ReasoningConfig, RequestBody } from "../types"
 
 export function normalizeModel(model: string | undefined): string {
-  if (!model) return "gpt-5.1"
+  if (!model) return "gpt-5.2-codex"
 
   const modelId = model.includes("/") ? model.split("/").pop()! : model
 
@@ -40,48 +40,11 @@ export function normalizeModel(model: string | undefined): string {
     return "gpt-5.2"
   }
 
-  if (
-    normalized.includes("gpt-5.1-codex-max") ||
-    normalized.includes("gpt 5.1 codex max")
-  ) {
-    return "gpt-5.1-codex-max"
-  }
-
-  if (
-    normalized.includes("gpt-5.1-codex-mini") ||
-    normalized.includes("gpt 5.1 codex mini")
-  ) {
-    return "gpt-5.1-codex-mini"
-  }
-
-  if (
-    normalized.includes("codex-mini-latest") ||
-    normalized.includes("gpt-5-codex-mini") ||
-    normalized.includes("gpt 5 codex mini")
-  ) {
-    return "codex-mini-latest"
-  }
-
-  if (
-    normalized.includes("gpt-5.1-codex") ||
-    normalized.includes("gpt 5.1 codex")
-  ) {
-    return "gpt-5.1-codex"
-  }
-
-  if (normalized.includes("gpt-5.1") || normalized.includes("gpt 5.1")) {
-    return "gpt-5.1"
-  }
-
   if (normalized.includes("codex")) {
-    return "gpt-5.1-codex"
+    return "gpt-5.2-codex"
   }
 
-  if (normalized.includes("gpt-5") || normalized.includes("gpt 5")) {
-    return "gpt-5.1"
-  }
-
-  return "gpt-5.1"
+  return "gpt-5.2-codex"
 }
 
 function resolveReasoningConfig(modelName: string, body: RequestBody): ReasoningConfig {
@@ -185,59 +148,19 @@ export function getReasoningConfig(
   const isGpt52General =
     (normalizedName.includes("gpt-5.2") || normalizedName.includes("gpt 5.2")) &&
     !isGpt52Codex
-  const isCodexMax =
-    normalizedName.includes("codex-max") ||
-    normalizedName.includes("codex max")
-  const isCodexMini =
-    normalizedName.includes("codex-mini") ||
-    normalizedName.includes("codex mini") ||
-    normalizedName.includes("codex_mini") ||
-    normalizedName.includes("codex-mini-latest")
-  const isCodex = normalizedName.includes("codex") && !isCodexMini
-  const isLightweight =
-    !isCodexMini &&
-    (normalizedName.includes("nano") || normalizedName.includes("mini"))
 
-  const isGpt51General =
-    (normalizedName.includes("gpt-5.1") || normalizedName.includes("gpt 5.1")) &&
-    !isCodex &&
-    !isCodexMax &&
-    !isCodexMini
+  const supportsXhigh = isGpt52General || isGpt52Codex
+  const supportsNone = isGpt52General
 
-  const supportsXhigh = isGpt52General || isGpt52Codex || isCodexMax
-  const supportsNone = isGpt52General || isGpt51General
-
-  const defaultEffort: ReasoningConfig["effort"] = isCodexMini
-    ? "medium"
-    : supportsXhigh
-      ? "high"
-      : isLightweight
-        ? "minimal"
-        : "medium"
+  const defaultEffort: ReasoningConfig["effort"] = supportsXhigh ? "high" : "medium"
 
   let effort = userConfig.reasoningEffort || defaultEffort
-
-  if (isCodexMini) {
-    if (effort === "minimal" || effort === "low" || effort === "none") {
-      effort = "medium"
-    }
-    if (effort === "xhigh") {
-      effort = "high"
-    }
-    if (effort !== "high" && effort !== "medium") {
-      effort = "medium"
-    }
-  }
 
   if (!supportsXhigh && effort === "xhigh") {
     effort = "high"
   }
 
   if (!supportsNone && effort === "none") {
-    effort = "low"
-  }
-
-  if (isCodex && effort === "minimal") {
     effort = "low"
   }
 

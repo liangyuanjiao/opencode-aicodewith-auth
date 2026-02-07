@@ -64,7 +64,7 @@ describe("applyProviderConfig", () => {
   const pluginEntry = "file:///path/to/plugin.ts"
   const standardProvider = {
     name: "AICodewith",
-    models: { "gpt-5.2": { name: "GPT-5.2" } },
+    models: { "gpt-5.3": { name: "GPT-5.3" } },
     npm: "file:///path/to/provider.ts",
   }
 
@@ -169,12 +169,12 @@ describe("applyProviderConfig", () => {
       const config: Record<string, unknown> = {
         provider: { [PROVIDER_ID]: { ...standardProvider } },
         plugin: [pluginEntry],
-        model: "aicodewith/gpt-5.2",
+        model: "aicodewith/gpt-5.3",
       }
       const result = applyProviderConfig(config, standardProvider, pluginEntry)
       
       expect(result.changes.some(c => c.startsWith("model_migrated:"))).toBe(false)
-      expect(config.model).toBe("aicodewith/gpt-5.2")
+      expect(config.model).toBe("aicodewith/gpt-5.3")
     })
   })
 
@@ -186,7 +186,7 @@ describe("applyProviderConfig", () => {
             name: "AICodewith",
             models: {
               "claude-opus-4-5-20251101": { name: "Claude Opus 4.5" },
-              "gpt-5.2": { name: "GPT-5.2" },
+              "gpt-5.3": { name: "GPT-5.3" },
             },
             npm: "file:///path/to/provider.ts",
           }
@@ -198,7 +198,7 @@ describe("applyProviderConfig", () => {
         name: "AICodewith",
         models: {
           "claude-opus-4-6-20260205": { name: "Claude Opus 4.6" },
-          "gpt-5.2": { name: "GPT-5.2" },
+          "gpt-5.3": { name: "GPT-5.3" },
         },
         npm: "file:///path/to/provider.ts",
       }
@@ -218,7 +218,7 @@ describe("applyProviderConfig", () => {
           [PROVIDER_ID]: {
             name: "AICodewith",
             models: {
-              "gpt-5.2": { name: "GPT-5.2" },
+              "gpt-5.3": { name: "GPT-5.3" },
             },
             npm: "file:///path/to/provider.ts",
           }
@@ -229,8 +229,8 @@ describe("applyProviderConfig", () => {
       const newStandardProvider = {
         name: "AICodewith",
         models: {
-          "gpt-5.2": { name: "GPT-5.2" },
-          "gpt-5.3-codex": { name: "GPT-5.3 Codex" },
+          "gpt-5.3": { name: "GPT-5.3" },
+          "gpt-5.4-codex": { name: "GPT-5.4 Codex" },
         },
         npm: "file:///path/to/provider.ts",
       }
@@ -239,7 +239,7 @@ describe("applyProviderConfig", () => {
       
       const updatedProvider = (oldConfig.provider as Record<string, unknown>)[PROVIDER_ID] as Record<string, unknown>
       const models = updatedProvider.models as Record<string, unknown>
-      expect(models["gpt-5.3-codex"]).toEqual({ name: "GPT-5.3 Codex" })
+      expect(models["gpt-5.4-codex"]).toEqual({ name: "GPT-5.4 Codex" })
     })
 
     it("removes deprecated models from plugin update", () => {
@@ -248,8 +248,8 @@ describe("applyProviderConfig", () => {
           [PROVIDER_ID]: {
             name: "AICodewith",
             models: {
-              "gpt-5.1": { name: "GPT-5.1" },
               "gpt-5.2": { name: "GPT-5.2" },
+              "gpt-5.3": { name: "GPT-5.3" },
             },
             npm: "file:///path/to/provider.ts",
           }
@@ -260,7 +260,7 @@ describe("applyProviderConfig", () => {
       const newStandardProvider = {
         name: "AICodewith",
         models: {
-          "gpt-5.2": { name: "GPT-5.2" },
+          "gpt-5.3": { name: "GPT-5.3" },
         },
         npm: "file:///path/to/provider.ts",
       }
@@ -269,8 +269,8 @@ describe("applyProviderConfig", () => {
       
       const updatedProvider = (oldConfig.provider as Record<string, unknown>)[PROVIDER_ID] as Record<string, unknown>
       const models = updatedProvider.models as Record<string, unknown>
-      expect(models["gpt-5.1"]).toBeUndefined()
-      expect(models["gpt-5.2"]).toEqual({ name: "GPT-5.2" })
+      expect(models["gpt-5.2"]).toBeUndefined()
+      expect(models["gpt-5.3"]).toEqual({ name: "GPT-5.3" })
     })
 
     it("overwrites user's custom model limits to match plugin definition", () => {
@@ -279,7 +279,7 @@ describe("applyProviderConfig", () => {
           [PROVIDER_ID]: {
             name: "AICodewith",
             models: {
-              "gpt-5.2": { 
+              "gpt-5.3": { 
                 name: "My Custom GPT", 
                 limit: { context: 999999, output: 999999 } 
               }

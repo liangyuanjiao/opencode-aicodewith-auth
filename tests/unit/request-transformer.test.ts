@@ -21,42 +21,6 @@ describe("normalizeModel", () => {
     })
   })
 
-  describe("GPT-5.1 models", () => {
-    it("normalizes gpt-5.1-codex variants", () => {
-      expect(normalizeModel("gpt-5.1-codex")).toBe("gpt-5.1-codex")
-      expect(normalizeModel("gpt 5.1 codex")).toBe("gpt-5.1-codex")
-    })
-
-    it("normalizes gpt-5.1-codex-max", () => {
-      expect(normalizeModel("gpt-5.1-codex-max")).toBe("gpt-5.1-codex-max")
-      expect(normalizeModel("gpt 5.1 codex max")).toBe("gpt-5.1-codex-max")
-    })
-
-    it("normalizes gpt-5.1-codex-mini", () => {
-      expect(normalizeModel("gpt-5.1-codex-mini")).toBe("gpt-5.1-codex-mini")
-      expect(normalizeModel("gpt 5.1 codex mini")).toBe("gpt-5.1-codex-mini")
-    })
-
-    it("normalizes gpt-5.1 base model", () => {
-      expect(normalizeModel("gpt-5.1")).toBe("gpt-5.1")
-      expect(normalizeModel("gpt 5.1")).toBe("gpt-5.1")
-    })
-  })
-
-  describe("codex-mini-latest", () => {
-    it("normalizes codex-mini-latest to gpt-5.1-codex-mini", () => {
-      expect(normalizeModel("codex-mini-latest")).toBe("gpt-5.1-codex-mini")
-    })
-
-    it("normalizes gpt-5-codex-mini to gpt-5.1-codex-mini (matches 5.1 pattern first)", () => {
-      expect(normalizeModel("gpt-5-codex-mini")).toBe("gpt-5.1-codex-mini")
-    })
-
-    it("normalizes gpt 5 codex mini (with spaces) to codex-mini-latest", () => {
-      expect(normalizeModel("gpt 5 codex mini")).toBe("codex-mini-latest")
-    })
-  })
-
   describe("provider prefix handling", () => {
     it("strips aicodewith/ prefix", () => {
       expect(normalizeModel("aicodewith/gpt-5.2-codex")).toBe("gpt-5.2-codex")
@@ -69,17 +33,12 @@ describe("normalizeModel", () => {
   })
 
   describe("fallback behavior", () => {
-    it("returns gpt-5.1 for undefined", () => {
-      expect(normalizeModel(undefined)).toBe("gpt-5.1")
+    it("returns gpt-5.2-codex for undefined", () => {
+      expect(normalizeModel(undefined)).toBe("gpt-5.2-codex")
     })
 
-    it("returns gpt-5.1 for generic codex", () => {
-      expect(normalizeModel("codex")).toBe("gpt-5.1-codex")
-    })
-
-    it("returns gpt-5.1 for generic gpt-5", () => {
-      expect(normalizeModel("gpt-5")).toBe("gpt-5.1")
-      expect(normalizeModel("gpt 5")).toBe("gpt-5.1")
+    it("returns gpt-5.2-codex for generic codex", () => {
+      expect(normalizeModel("codex")).toBe("gpt-5.2-codex")
     })
   })
 })
@@ -135,21 +94,6 @@ describe("getReasoningConfig", () => {
       const config = getReasoningConfig("gpt-5.2")
       expect(config.effort).toBe("high")
     })
-
-    it("returns high for codex-max", () => {
-      const config = getReasoningConfig("gpt-5.1-codex-max")
-      expect(config.effort).toBe("high")
-    })
-
-    it("returns medium for codex-mini", () => {
-      const config = getReasoningConfig("codex-mini-latest")
-      expect(config.effort).toBe("medium")
-    })
-
-    it("returns medium for regular codex", () => {
-      const config = getReasoningConfig("gpt-5.1-codex")
-      expect(config.effort).toBe("medium")
-    })
   })
 
   describe("user config overrides", () => {
@@ -165,11 +109,6 @@ describe("getReasoningConfig", () => {
   })
 
   describe("effort level constraints", () => {
-    it("downgrades xhigh to high for non-supporting models", () => {
-      const config = getReasoningConfig("gpt-5.1-codex", { reasoningEffort: "xhigh" })
-      expect(config.effort).toBe("high")
-    })
-
     it("allows xhigh for gpt-5.2", () => {
       const config = getReasoningConfig("gpt-5.2", { reasoningEffort: "xhigh" })
       expect(config.effort).toBe("xhigh")
@@ -180,33 +119,9 @@ describe("getReasoningConfig", () => {
       expect(config.effort).toBe("xhigh")
     })
 
-    it("upgrades none to low for non-supporting models", () => {
-      const config = getReasoningConfig("gpt-5.1-codex", { reasoningEffort: "none" })
-      expect(config.effort).toBe("low")
-    })
-
     it("allows none for gpt-5.2", () => {
       const config = getReasoningConfig("gpt-5.2", { reasoningEffort: "none" })
       expect(config.effort).toBe("none")
-    })
-
-    it("allows none for gpt-5.1 base", () => {
-      const config = getReasoningConfig("gpt-5.1", { reasoningEffort: "none" })
-      expect(config.effort).toBe("none")
-    })
-
-    it("constrains codex-mini to medium or high only", () => {
-      expect(getReasoningConfig("codex-mini-latest", { reasoningEffort: "low" }).effort).toBe("medium")
-      expect(getReasoningConfig("codex-mini-latest", { reasoningEffort: "minimal" }).effort).toBe("medium")
-      expect(getReasoningConfig("codex-mini-latest", { reasoningEffort: "none" }).effort).toBe("medium")
-      expect(getReasoningConfig("codex-mini-latest", { reasoningEffort: "xhigh" }).effort).toBe("high")
-      expect(getReasoningConfig("codex-mini-latest", { reasoningEffort: "high" }).effort).toBe("high")
-      expect(getReasoningConfig("codex-mini-latest", { reasoningEffort: "medium" }).effort).toBe("medium")
-    })
-
-    it("upgrades minimal to low for codex models", () => {
-      const config = getReasoningConfig("gpt-5.1-codex", { reasoningEffort: "minimal" })
-      expect(config.effort).toBe("low")
     })
   })
 

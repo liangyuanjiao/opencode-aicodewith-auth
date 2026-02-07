@@ -131,10 +131,6 @@ describe("Model Alias Resolution E2E", () => {
     expect(getNormalizedModel("GPT-5.2")).toBe("gpt-5.2")
     expect(getNormalizedModel("gpt-5.2-high")).toBe("gpt-5.2")
     expect(getNormalizedModel("gpt-5.2-xhigh")).toBe("gpt-5.2")
-    
-    expect(getNormalizedModel("codex")).toBe("gpt-5.1-codex")
-    expect(getNormalizedModel("gpt-5")).toBe("gpt-5.1")
-    expect(getNormalizedModel("gpt 5")).toBe("gpt-5.1")
   })
 })
 
