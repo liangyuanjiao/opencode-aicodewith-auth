@@ -12,8 +12,11 @@ describe("Migration Rules", () => {
       expect(MODEL_MIGRATIONS["aicodewith/claude-opus-4-5-20251101"]).toBe("aicodewith/claude-opus-4-6-20260205")
     })
 
-    it("contains third-party variant mappings", () => {
-      expect(MODEL_MIGRATIONS["claude-opus-4-5-20251101-third-party"]).toBe("claude-opus-4-6-20260205-third-party")
+    it("migrates third-party variants to non-third-party", () => {
+      expect(MODEL_MIGRATIONS["claude-opus-4-6-20260205-third-party"]).toBe("claude-opus-4-6-20260205")
+      expect(MODEL_MIGRATIONS["claude-opus-4-5-20251101-third-party"]).toBe("claude-opus-4-6-20260205")
+      expect(MODEL_MIGRATIONS["claude-sonnet-4-5-20250929-third-party"]).toBe("claude-sonnet-4-5-20250929")
+      expect(MODEL_MIGRATIONS["claude-haiku-4-5-20251001-third-party"]).toBe("claude-haiku-4-5-20251001")
     })
   })
 

@@ -52,22 +52,6 @@
         ]
       }
     },
-    "claude-opus-4-6-20260205-third-party": {
-      "name": "Claude Opus 4.6 (third party)",
-      "limit": {
-        "context": 200000,
-        "output": 64000
-      },
-      "modalities": {
-        "input": [
-          "text",
-          "image"
-        ],
-        "output": [
-          "text"
-        ]
-      }
-    },
     "claude-sonnet-4-5-20250929": {
       "name": "Claude Sonnet 4.5",
       "limit": {
@@ -84,40 +68,8 @@
         ]
       }
     },
-    "claude-sonnet-4-5-20250929-third-party": {
-      "name": "Claude Sonnet 4.5 (third party)",
-      "limit": {
-        "context": 200000,
-        "output": 64000
-      },
-      "modalities": {
-        "input": [
-          "text",
-          "image"
-        ],
-        "output": [
-          "text"
-        ]
-      }
-    },
     "claude-haiku-4-5-20251001": {
       "name": "Claude Haiku 4.5",
-      "limit": {
-        "context": 200000,
-        "output": 8192
-      },
-      "modalities": {
-        "input": [
-          "text",
-          "image"
-        ],
-        "output": [
-          "text"
-        ]
-      }
-    },
-    "claude-haiku-4-5-20251001-third-party": {
-      "name": "Claude Haiku 4.5 (third party)",
       "limit": {
         "context": 200000,
         "output": 8192

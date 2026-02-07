@@ -132,10 +132,11 @@ describe("Model Registry", () => {
         .toBe(`${PROVIDER_ID}/claude-opus-4-6-20260205`)
     })
 
-    it("handles third-party variants", () => {
+    it("migrates third-party variants to non-third-party", () => {
       const migrations = buildModelMigrations()
-      expect(migrations["claude-opus-4-5-20251101-third-party"])
-        .toBe("claude-opus-4-6-20260205-third-party")
+      expect(migrations["claude-opus-4-6-20260205-third-party"]).toBe("claude-opus-4-6-20260205")
+      expect(migrations["claude-sonnet-4-5-20250929-third-party"]).toBe("claude-sonnet-4-5-20250929")
+      expect(migrations["claude-haiku-4-5-20251001-third-party"]).toBe("claude-haiku-4-5-20251001")
     })
   })
 

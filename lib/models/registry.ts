@@ -30,7 +30,6 @@ export interface ModelDefinition {
   deprecated?: boolean
   replacedBy?: string
   aliases?: string[]
-  thirdPartyVariant?: boolean
 }
 
 export const PROVIDER_ID = "aicodewith"
@@ -135,15 +134,6 @@ export const MODELS: ModelDefinition[] = [
     modalities: { input: ["text", "image"], output: ["text"] },
   },
   {
-    id: "claude-opus-4-6-20260205-third-party",
-    family: "claude",
-    displayName: "Claude Opus 4.6 (third party)",
-    version: "4.6",
-    limit: { context: 200000, output: 64000 },
-    modalities: { input: ["text", "image"], output: ["text"] },
-    thirdPartyVariant: true,
-  },
-  {
     id: "claude-sonnet-4-5-20250929",
     family: "claude",
     displayName: "Claude Sonnet 4.5",
@@ -152,30 +142,12 @@ export const MODELS: ModelDefinition[] = [
     modalities: { input: ["text", "image"], output: ["text"] },
   },
   {
-    id: "claude-sonnet-4-5-20250929-third-party",
-    family: "claude",
-    displayName: "Claude Sonnet 4.5 (third party)",
-    version: "4.5",
-    limit: { context: 200000, output: 64000 },
-    modalities: { input: ["text", "image"], output: ["text"] },
-    thirdPartyVariant: true,
-  },
-  {
     id: "claude-haiku-4-5-20251001",
     family: "claude",
     displayName: "Claude Haiku 4.5",
     version: "4.5",
     limit: { context: 200000, output: 8192 },
     modalities: { input: ["text", "image"], output: ["text"] },
-  },
-  {
-    id: "claude-haiku-4-5-20251001-third-party",
-    family: "claude",
-    displayName: "Claude Haiku 4.5 (third party)",
-    version: "4.5",
-    limit: { context: 200000, output: 8192 },
-    modalities: { input: ["text", "image"], output: ["text"] },
-    thirdPartyVariant: true,
   },
 
   // Deprecated Claude Models (for migration)
@@ -190,15 +162,44 @@ export const MODELS: ModelDefinition[] = [
     replacedBy: "claude-opus-4-6-20260205",
   },
   {
+    id: "claude-opus-4-6-20260205-third-party",
+    family: "claude",
+    displayName: "Claude Opus 4.6 third-party (deprecated)",
+    version: "4.6",
+    limit: { context: 200000, output: 64000 },
+    modalities: { input: ["text", "image"], output: ["text"] },
+    deprecated: true,
+    replacedBy: "claude-opus-4-6-20260205",
+  },
+  {
     id: "claude-opus-4-5-20251101-third-party",
     family: "claude",
-    displayName: "Claude Opus 4.5 (third party, deprecated)",
+    displayName: "Claude Opus 4.5 third-party (deprecated)",
     version: "4.5",
     limit: { context: 200000, output: 64000 },
     modalities: { input: ["text", "image"], output: ["text"] },
     deprecated: true,
-    replacedBy: "claude-opus-4-6-20260205-third-party",
-    thirdPartyVariant: true,
+    replacedBy: "claude-opus-4-6-20260205",
+  },
+  {
+    id: "claude-sonnet-4-5-20250929-third-party",
+    family: "claude",
+    displayName: "Claude Sonnet 4.5 third-party (deprecated)",
+    version: "4.5",
+    limit: { context: 200000, output: 64000 },
+    modalities: { input: ["text", "image"], output: ["text"] },
+    deprecated: true,
+    replacedBy: "claude-sonnet-4-5-20250929",
+  },
+  {
+    id: "claude-haiku-4-5-20251001-third-party",
+    family: "claude",
+    displayName: "Claude Haiku 4.5 third-party (deprecated)",
+    version: "4.5",
+    limit: { context: 200000, output: 8192 },
+    modalities: { input: ["text", "image"], output: ["text"] },
+    deprecated: true,
+    replacedBy: "claude-haiku-4-5-20251001",
   },
 
   // Gemini Models

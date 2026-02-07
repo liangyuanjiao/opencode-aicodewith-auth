@@ -118,7 +118,9 @@ describe("Model Version Upgrade E2E", () => {
     
     expect(migrations["claude-opus-4-5-20251101"]).toBe("claude-opus-4-6-20260205")
     expect(migrations["aicodewith/claude-opus-4-5-20251101"]).toBe("aicodewith/claude-opus-4-6-20260205")
-    expect(migrations["claude-opus-4-5-20251101-third-party"]).toBe("claude-opus-4-6-20260205-third-party")
+    expect(migrations["claude-opus-4-5-20251101-third-party"]).toBe("claude-opus-4-6-20260205")
+    expect(migrations["claude-opus-4-6-20260205-third-party"]).toBe("claude-opus-4-6-20260205")
+    expect(migrations["claude-sonnet-4-5-20250929-third-party"]).toBe("claude-sonnet-4-5-20250929")
   })
 })
 
