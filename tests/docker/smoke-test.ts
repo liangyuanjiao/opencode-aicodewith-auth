@@ -1,3 +1,4 @@
+import { createOpencodeServer, createOpencodeClient } from "@opencode-ai/sdk/v2"
 import { getActiveModels, PROVIDER_ID } from "../../lib/models/registry"
 
 interface TestResult {
@@ -8,31 +9,9 @@ interface TestResult {
   durationMs: number
 }
 
-async function waitForServer(baseUrl: string, maxRetries = 30): Promise<void> {
-  console.log(`⏳ Waiting for OpenCode server at ${baseUrl}...`)
-  
-  for (let i = 0; i < maxRetries; i++) {
-    try {
-      const res = await fetch(`${baseUrl}/health`, { method: "GET" })
-      if (res.ok) {
-        console.log(`✅ Server is ready!`)
-        return
-      }
-    } catch (e) {
-      // Server not ready yet
-    }
-    
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    if ((i + 1) % 5 === 0) {
-      console.log(`   Still waiting... (${i + 1}/${maxRetries})`)
-    }
-  }
-  
-  throw new Error(`Server did not become ready after ${maxRetries} seconds`)
-}
-
 async function testModel(
-  baseUrl: string,
+  client: ReturnType<typeof createOpencodeClient>,
+  sessionId: string,
   modelId: string
 ): Promise<TestResult> {
   const fullModelId = `${PROVIDER_ID}/${modelId}`
@@ -41,56 +20,29 @@ async function testModel(
   console.log(`\n🧪 Testing ${fullModelId}...`)
   
   try {
-    // Create session
-    const sessionRes = await fetch(`${baseUrl}/v2/sessions`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({}),
+    const { data: response, error: promptError } = await client.session.prompt({
+      sessionID: sessionId,
+      parts: [{ type: "text", text: "Say 'OK' if you can hear me" }],
+      model: {
+        providerID: PROVIDER_ID,
+        modelID: modelId,
+      },
     })
-    
-    if (!sessionRes.ok) {
-      throw new Error(`Failed to create session: ${sessionRes.status} ${await sessionRes.text()}`)
+
+    if (promptError) {
+      throw new Error(`Prompt failed: ${JSON.stringify(promptError)}`)
     }
-    
-    const { data: session } = await sessionRes.json()
-    
-    // Send prompt
-    const promptRes = await fetch(`${baseUrl}/v2/sessions/${session.id}/prompt`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        parts: [{ type: "text", text: "Say 'OK' if you can hear me" }],
-        model: {
-          providerID: PROVIDER_ID,
-          modelID: modelId,
-        },
-      }),
-    })
-    
-    if (!promptRes.ok) {
-      const errorText = await promptRes.text()
-      throw new Error(`Prompt failed: ${promptRes.status} ${errorText}`)
-    }
-    
-    const promptResponseText = await promptRes.text()
-    let response
-    try {
-      const parsed = JSON.parse(promptResponseText)
-      response = parsed.data
-    } catch (e) {
-      throw new Error(`Failed to parse JSON response: ${promptResponseText.slice(0, 200)}`)
-    }
-    const assistantMessage = response?.parts?.find((p: any) => p.type === "text")
-    const responseText = assistantMessage?.text || "(no text response)"
+
+    const responseText = JSON.stringify(response).slice(0, 200)
     
     const duration = Date.now() - start
     console.log(`✅ ${fullModelId} responded in ${duration}ms`)
-    console.log(`   Response: "${responseText.slice(0, 100)}${responseText.length > 100 ? '...' : ''}"`)
+    console.log(`   Response: "${responseText}${responseText.length > 100 ? '...' : ''}"`)
 
     return {
       model: fullModelId,
       success: true,
-      responsePreview: responseText.slice(0, 200),
+      responsePreview: responseText,
       durationMs: duration,
     }
   } catch (error) {
@@ -108,44 +60,52 @@ async function testModel(
 }
 
 async function main() {
-  console.log("🚀 AICodewith Model Smoke Test (HTTP Server)")
-  console.log("==============================================\n")
+  console.log("🚀 AICodewith Model Smoke Test")
+  console.log("================================\n")
 
   if (!process.env.AICODEWITH_API_KEY) {
     console.error("❌ AICODEWITH_API_KEY environment variable is required")
     process.exit(1)
   }
 
-  const baseUrl = process.env.OPENCODE_SERVER_URL || "http://localhost:4096"
-  console.log(`📡 Connecting to OpenCode server at ${baseUrl}`)
-
   const activeModels = getActiveModels()
-  console.log(`\nFound ${activeModels.length} active models:`)
+  console.log(`Found ${activeModels.length} active models:`)
   activeModels.forEach(m => console.log(`  - ${m.id} (${m.displayName})`))
 
+  console.log("\n📡 Starting opencode server...")
+  let server: Awaited<ReturnType<typeof createOpencodeServer>> | null = null
+  
   try {
-    // Wait for server to be ready
-    await waitForServer(baseUrl)
-
-    // Set API key
-    console.log("\n🔑 Setting API key...")
-    const authRes = await fetch(`${baseUrl}/v2/auth`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        providerID: PROVIDER_ID,
-        auth: { type: "api", key: process.env.AICODEWITH_API_KEY },
-      }),
+    server = await createOpencodeServer({
+      timeout: 30000,
+      config: {
+        plugin: ["opencode-aicodewith-auth"],
+      },
     })
-    
-    if (!authRes.ok) {
-      throw new Error(`Failed to set auth: ${authRes.status} ${await authRes.text()}`)
+    console.log(`   Server running at ${server.url}`)
+
+    const client = createOpencodeClient({ baseUrl: server.url })
+
+    console.log("\n🔑 Setting API key...")
+    const { error: authError } = await client.auth.set({
+      providerID: PROVIDER_ID,
+      auth: { type: "api", key: process.env.AICODEWITH_API_KEY },
+    })
+
+    if (authError) {
+      throw new Error(`Auth failed: ${JSON.stringify(authError)}`)
+    }
+
+    console.log("\n📝 Creating session...")
+    const { data: session, error: sessionError } = await client.session.create()
+    if (sessionError || !session) {
+      throw new Error(`Failed to create session: ${JSON.stringify(sessionError)}`)
     }
 
     const results: TestResult[] = []
     
     for (const model of activeModels) {
-      const result = await testModel(baseUrl, model.id)
+      const result = await testModel(client, session.id, model.id)
       results.push(result)
     }
 
@@ -172,6 +132,11 @@ async function main() {
   } catch (error) {
     console.error("\n💥 Fatal error:", error)
     process.exit(1)
+  } finally {
+    if (server) {
+      console.log("\n🛑 Shutting down server...")
+      server.close()
+    }
   }
 }
 

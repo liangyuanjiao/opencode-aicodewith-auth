@@ -55,5 +55,5 @@ RUN mkdir -p /root/.local/share/opencode/plugins/opencode-aicodewith-auth && \
     cp -r assets /root/.local/share/opencode/plugins/opencode-aicodewith-auth/ && \
     cp package.json /root/.local/share/opencode/plugins/opencode-aicodewith-auth/
 
-# Start OpenCode server in background and run tests
-CMD ["sh", "-c", "opencode serve --port=4096 --hostname=127.0.0.1 & sleep 5 && bun tests/docker/smoke-test.ts"]
+# Run smoke test (SDK starts its own server)
+CMD ["bun", "tests/docker/smoke-test.ts"]
