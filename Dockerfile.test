@@ -22,8 +22,9 @@ WORKDIR /app
 COPY --from=e2e /tmp/oh-my-opencode /tmp/oh-my-opencode
 ENV OMO_PATH=/tmp/oh-my-opencode
 
-# Install OpenCode via npm (1.x version with serve command)
-RUN bun install -g opencode-ai@latest
+# Install OpenCode via npm (bun has issues with optionalDependencies)
+RUN apt-get update && apt-get install -y nodejs npm && rm -rf /var/lib/apt/lists/* && \
+    npm install -g opencode-ai@latest
 
 # Build plugin
 COPY --from=deps /app/node_modules ./node_modules
@@ -34,7 +35,8 @@ FROM base AS smoke
 WORKDIR /app
 
 # Install OpenCode via npm
-RUN bun install -g opencode-ai@latest
+RUN apt-get update && apt-get install -y nodejs npm && rm -rf /var/lib/apt/lists/* && \
+    npm install -g opencode-ai@latest
 
 # Copy built plugin and oh-my-opencode from builder
 COPY --from=smoke-builder /tmp/oh-my-opencode /tmp/oh-my-opencode
