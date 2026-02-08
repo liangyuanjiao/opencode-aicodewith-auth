@@ -16,6 +16,17 @@ COPY . .
 CMD ["bun", "tests/docker/e2e-test.ts"]
 
 FROM base AS smoke
+# Install OpenCode from source for stability
+RUN apt-get update && apt-get install -y git curl build-essential && rm -rf /var/lib/apt/lists/*
+RUN git clone --depth 1 https://github.com/opencode-ai/opencode.git /tmp/opencode && \
+    cd /tmp/opencode && \
+    bun install && \
+    bun run build && \
+    bun link && \
+    cd / && rm -rf /tmp/opencode
+ENV PATH="/root/.bun/bin:$PATH"
+RUN opencode --version
+
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN bun run build
