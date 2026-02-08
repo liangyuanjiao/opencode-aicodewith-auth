@@ -16,6 +16,11 @@ COPY . .
 CMD ["bun", "tests/docker/e2e-test.ts"]
 
 FROM base AS smoke
+# Clone oh-my-opencode for build script
+RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
+RUN git clone --depth 1 https://github.com/code-yeongyu/oh-my-opencode.git /tmp/oh-my-opencode
+ENV OMO_PATH=/tmp/oh-my-opencode
+
 # Smoke test uses @opencode-ai/sdk's createOpencodeServer() which runs in-memory
 # No need to install OpenCode CLI
 COPY --from=deps /app/node_modules ./node_modules
