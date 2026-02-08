@@ -1,3 +1,16 @@
+FROM oven/bun:1 AS builder
+
+WORKDIR /build
+
+# Copy source and build
+COPY package.json bun.lock* ./
+COPY scripts ./scripts
+RUN bun install --frozen-lockfile
+
+COPY . .
+RUN bun run build
+
+# Final image
 FROM debian:trixie-slim
 
 # Install OpenCode from official release
@@ -7,10 +20,10 @@ RUN curl -fsSL https://github.com/opencode-ai/opencode/releases/latest/download/
     chmod +x /usr/local/bin/opencode && \
     rm /tmp/opencode.tar.gz
 
-# Install plugin
-COPY dist /root/.local/share/opencode/plugins/opencode-aicodewith-auth/dist
-COPY assets /root/.local/share/opencode/plugins/opencode-aicodewith-auth/assets
-COPY package.json /root/.local/share/opencode/plugins/opencode-aicodewith-auth/
+# Install plugin from builder
+COPY --from=builder /build/dist /root/.local/share/opencode/plugins/opencode-aicodewith-auth/dist
+COPY --from=builder /build/assets /root/.local/share/opencode/plugins/opencode-aicodewith-auth/assets
+COPY --from=builder /build/package.json /root/.local/share/opencode/plugins/opencode-aicodewith-auth/
 
 WORKDIR /workspace
 
