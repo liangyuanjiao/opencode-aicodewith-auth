@@ -7,18 +7,17 @@ services:
 
   # OpenCode HTTP server for smoke tests
   opencode-server:
-    image: ghcr.io/opencode-ai/opencode:latest
-    command: ["serve", "--port=4096", "--hostname=0.0.0.0"]
+    build:
+      context: .
+      dockerfile: Dockerfile.opencode
+    command: ["opencode", "serve", "--port=4096", "--hostname=0.0.0.0"]
     ports:
       - "4096:4096"
-    volumes:
-      - ./dist:/app/dist:ro
-      - ./assets:/app/assets:ro
     environment:
-      - OPENCODE_CONFIG=/app/opencode-config.json
+      - OPENCODE_CONFIG=/workspace/opencode-config.json
     configs:
       - source: opencode_config
-        target: /app/opencode-config.json
+        target: /workspace/opencode-config.json
 
   smoke:
     build:
@@ -30,7 +29,8 @@ services:
       - OPENCODE_SERVER_URL=http://opencode-server:4096
     depends_on:
       - opencode-server
-    network_mode: bridge
+    networks:
+      - test-network
 
   smoke-agents:
     build:
@@ -42,8 +42,13 @@ services:
       - OPENCODE_SERVER_URL=http://opencode-server:4096
     depends_on:
       - opencode-server
-    network_mode: bridge
+    networks:
+      - test-network
     command: ["bun", "tests/docker/smoke-test-agents.ts"]
+
+networks:
+  test-network:
+    driver: bridge
 
 configs:
   opencode_config:
