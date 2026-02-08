@@ -13,3 +13,13 @@ services:
     environment:
       - AICODEWITH_API_KEY=${AICODEWITH_API_KEY}
     network_mode: host
+
+  smoke-agents:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+      target: smoke
+    environment:
+      - AICODEWITH_API_KEY=${AICODEWITH_API_KEY}
+    network_mode: host
+    command: ["bun", "tests/docker/smoke-test-agents.ts"]

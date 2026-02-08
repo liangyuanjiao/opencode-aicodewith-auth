@@ -3,6 +3,7 @@ WORKDIR /app
 
 FROM base AS deps
 COPY package.json bun.lock* ./
+COPY scripts ./scripts
 RUN bun install --frozen-lockfile
 
 FROM base AS e2e
