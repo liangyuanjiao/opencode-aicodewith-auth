@@ -2,6 +2,11 @@ FROM oven/bun:1 AS builder
 
 WORKDIR /build
 
+# Install git and clone oh-my-opencode (required for build script)
+RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
+RUN git clone --depth 1 https://github.com/code-yeongyu/oh-my-opencode.git /tmp/oh-my-opencode
+ENV OMO_PATH=/tmp/oh-my-opencode
+
 # Copy source and build
 COPY package.json bun.lock* ./
 COPY scripts ./scripts
