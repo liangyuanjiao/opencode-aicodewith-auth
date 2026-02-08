@@ -33,16 +33,16 @@ async function testModel(
       throw new Error(`Prompt failed: ${JSON.stringify(promptError)}`)
     }
 
-    const responseText = JSON.stringify(response).slice(0, 200)
+    const responseText = JSON.stringify(response, null, 2)
     
     const duration = Date.now() - start
     console.log(`✅ ${fullModelId} responded in ${duration}ms`)
-    console.log(`   Response: "${responseText}${responseText.length > 100 ? '...' : ''}"`)
+    console.log(`   Full Response:\n${responseText}`)
 
     return {
       model: fullModelId,
       success: true,
-      responsePreview: responseText,
+      responsePreview: responseText.slice(0, 500),
       durationMs: duration,
     }
   } catch (error) {
