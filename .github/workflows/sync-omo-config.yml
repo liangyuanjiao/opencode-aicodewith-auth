@@ -26,6 +26,8 @@ jobs:
           git clone --depth 1 https://github.com/code-yeongyu/oh-my-opencode.git /tmp/oh-my-opencode
 
       - name: Generate default config
+        env:
+          OMO_PATH: /tmp/oh-my-opencode
         run: bun run scripts/generate-omo-config.ts
 
       - name: Check for changes

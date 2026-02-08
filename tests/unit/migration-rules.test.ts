@@ -39,10 +39,10 @@ describe("Migration Rules", () => {
   })
 
   describe("OMO default config as migration target", () => {
-    it("OMO_MODEL_ASSIGNMENTS contains current model versions", () => {
+    it("OMO_MODEL_ASSIGNMENTS contains current model versions for custom agents", () => {
       expect(OMO_MODEL_ASSIGNMENTS.agents.build).toBe("aicodewith/claude-opus-4-6-20260205")
-      expect(OMO_MODEL_ASSIGNMENTS.agents.sisyphus).toBe("aicodewith/claude-sonnet-4-5-20250929")
-      expect(OMO_MODEL_ASSIGNMENTS.agents.oracle).toBe("aicodewith/gpt-5.2")
+      expect(OMO_MODEL_ASSIGNMENTS.agents.plan).toBe("aicodewith/claude-opus-4-6-20260205")
+      expect(OMO_MODEL_ASSIGNMENTS.agents["sisyphus-junior"]).toBe("aicodewith/claude-sonnet-4-5-20250929")
     })
 
     it("OMO_MODEL_ASSIGNMENTS does NOT contain deprecated models", () => {

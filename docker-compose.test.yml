@@ -1,0 +1,15 @@
+services:
+  e2e:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+      target: e2e
+
+  smoke:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+      target: smoke
+    environment:
+      - AICODEWITH_API_KEY=${AICODEWITH_API_KEY}
+    network_mode: host

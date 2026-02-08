@@ -1,0 +1,16 @@
+language: "zh-CN"
+reviews:
+  auto_review:
+    enabled: true
+    drafts: false
+  path_filters:
+    - "!dist/**"
+    - "!*.lock"
+    - "!node_modules/**"
+  path_instructions:
+    - path: "lib/models/**"
+      instructions: "This is the model registry. Check for correct model definitions, proper deprecation handling, and consistent naming."
+    - path: "lib/provider/**"
+      instructions: "This is the AI provider implementation. Verify API compatibility and error handling."
+chat:
+  auto_reply: true
