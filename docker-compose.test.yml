@@ -18,6 +18,14 @@ services:
     configs:
       - source: opencode_config
         target: /workspace/opencode-config.json
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4096/health"]
+      interval: 2s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
+    networks:
+      - test-network
 
   smoke:
     build:
@@ -28,7 +36,8 @@ services:
       - AICODEWITH_API_KEY=${AICODEWITH_API_KEY}
       - OPENCODE_SERVER_URL=http://opencode-server:4096
     depends_on:
-      - opencode-server
+      opencode-server:
+        condition: service_healthy
     networks:
       - test-network
 
@@ -41,7 +50,8 @@ services:
       - AICODEWITH_API_KEY=${AICODEWITH_API_KEY}
       - OPENCODE_SERVER_URL=http://opencode-server:4096
     depends_on:
-      - opencode-server
+      opencode-server:
+        condition: service_healthy
     networks:
       - test-network
     command: ["bun", "tests/docker/smoke-test-agents.ts"]

@@ -18,7 +18,7 @@ RUN bun run build
 # Final image
 FROM debian:trixie-slim
 
-# Install OpenCode from official release
+# Install OpenCode and curl (for healthcheck)
 RUN apt-get update && apt-get install -y curl ca-certificates && rm -rf /var/lib/apt/lists/*
 RUN curl -fsSL https://github.com/opencode-ai/opencode/releases/latest/download/opencode-linux-x86_64.tar.gz -o /tmp/opencode.tar.gz && \
     tar -xzf /tmp/opencode.tar.gz -C /usr/local/bin && \
