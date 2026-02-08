@@ -10,11 +10,9 @@ const outputPath = join(__dirname, "../assets/default-omo-config.json")
 
 const OMO_PATH = process.env.OMO_PATH || "/tmp/oh-my-opencode"
 
-const CUSTOM_AGENTS = ["build", "plan", "sisyphus-junior", "OpenCode-Builder", "general", "frontend-ui-ux-engineer", "document-writer"]
-const CUSTOM_CATEGORIES = ["visual", "business-logic", "data-analysis"]
-
 async function main() {
   const { generateModelConfig } = await import(`${OMO_PATH}/src/cli/model-fallback.ts`)
+  const { AGENT_MODEL_REQUIREMENTS, CATEGORY_MODEL_REQUIREMENTS } = await import(`${OMO_PATH}/src/shared/model-requirements.ts`)
   
   const installConfig = {
     hasClaude: true,
@@ -44,8 +42,9 @@ async function main() {
     }
   }
 
-  for (const agentName of CUSTOM_AGENTS) {
-    if (OMO_MODEL_ASSIGNMENTS.agents[agentName]) {
+  const omoAgentNames = Object.keys(AGENT_MODEL_REQUIREMENTS)
+  for (const agentName of Object.keys(OMO_MODEL_ASSIGNMENTS.agents)) {
+    if (!omoAgentNames.includes(agentName) && OMO_MODEL_ASSIGNMENTS.agents[agentName]) {
       convertedConfig.agents[agentName] = { model: OMO_MODEL_ASSIGNMENTS.agents[agentName] }
     }
   }
@@ -59,8 +58,9 @@ async function main() {
     }
   }
 
-  for (const categoryName of CUSTOM_CATEGORIES) {
-    if (OMO_MODEL_ASSIGNMENTS.categories[categoryName]) {
+  const omoCategoryNames = Object.keys(CATEGORY_MODEL_REQUIREMENTS)
+  for (const categoryName of Object.keys(OMO_MODEL_ASSIGNMENTS.categories)) {
+    if (!omoCategoryNames.includes(categoryName) && OMO_MODEL_ASSIGNMENTS.categories[categoryName]) {
       convertedConfig.categories[categoryName] = { model: OMO_MODEL_ASSIGNMENTS.categories[categoryName] }
     }
   }
