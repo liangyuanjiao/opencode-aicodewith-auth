@@ -16,13 +16,17 @@ COPY . .
 CMD ["bun", "tests/docker/e2e-test.ts"]
 
 FROM base AS smoke
+# Install OpenCode CLI from official release (required by createOpencodeServer)
+RUN apt-get update && apt-get install -y git curl && rm -rf /var/lib/apt/lists/*
+RUN curl -fsSL https://github.com/opencode-ai/opencode/releases/latest/download/opencode-linux-amd64.deb -o /tmp/opencode.deb && \
+    dpkg -i /tmp/opencode.deb && \
+    rm /tmp/opencode.deb
+RUN opencode --version
+
 # Clone oh-my-opencode for build script
-RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
 RUN git clone --depth 1 https://github.com/code-yeongyu/oh-my-opencode.git /tmp/oh-my-opencode
 ENV OMO_PATH=/tmp/oh-my-opencode
 
-# Smoke test uses @opencode-ai/sdk's createOpencodeServer() which runs in-memory
-# No need to install OpenCode CLI
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN bun run build
