@@ -11,13 +11,13 @@
       "model": "aicodewith/gpt-5.2"
     },
     "librarian": {
-      "model": "opencode/big-pickle"
+      "model": "aicodewith/claude-sonnet-4-5-20250929"
     },
     "explore": {
-      "model": "aicodewith/gemini-3-flash-preview"
+      "model": "aicodewith/claude-haiku-4-5-20251001"
     },
     "multimodal-looker": {
-      "model": "aicodewith/gemini-3-flash-preview"
+      "model": "aicodewith/gemini-3-pro"
     },
     "prometheus": {
       "model": "aicodewith/claude-opus-4-6-20260205"
@@ -67,7 +67,7 @@
       "model": "aicodewith/gemini-3-pro"
     },
     "quick": {
-      "model": "aicodewith/gemini-3-flash-preview"
+      "model": "aicodewith/claude-haiku-4-5-20251001"
     },
     "unspecified-low": {
       "model": "aicodewith/claude-sonnet-4-5-20250929"
@@ -76,7 +76,7 @@
       "model": "aicodewith/claude-sonnet-4-5-20250929"
     },
     "writing": {
-      "model": "aicodewith/gemini-3-flash-preview"
+      "model": "aicodewith/gemini-3-pro"
     },
     "visual": {
       "model": "aicodewith/gemini-3-pro"
