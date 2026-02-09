@@ -196,5 +196,17 @@ describe("Model Registry", () => {
       const keys = Object.keys(map)
       expect(keys.every(k => k === k.toLowerCase())).toBe(true)
     })
+
+    it("maps provider-prefixed model id to base model id", () => {
+      const map = buildAliasMap()
+      expect(map["aicodewith/claude-opus-4-6-20260205"]).toBe("claude-opus-4-6-20260205")
+      expect(map["aicodewith/gpt-5.2"]).toBe("gpt-5.2")
+    })
+
+    it("maps provider-prefixed effort variants to base model", () => {
+      const map = buildAliasMap()
+      expect(map["aicodewith/gpt-5.3-codex-high"]).toBe("gpt-5.3-codex")
+      expect(map["aicodewith/claude-opus-4-6-20260205-xhigh"]).toBe("claude-opus-4-6-20260205")
+    })
   })
 })

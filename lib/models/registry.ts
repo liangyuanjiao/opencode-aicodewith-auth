@@ -271,22 +271,24 @@ export const buildProviderConfig = () => {
 
 export const buildAliasMap = (): Record<string, string> => {
   const map: Record<string, string> = {}
-  
+
   for (const model of getActiveModels()) {
     map[model.id] = model.id
-    
+    map[`${PROVIDER_ID}/${model.id}`] = model.id
+
     if (model.aliases) {
       for (const alias of model.aliases) {
         map[alias.toLowerCase()] = model.id
       }
     }
-    
+
     const effortLevels = ["none", "low", "medium", "high", "xhigh"]
     for (const effort of effortLevels) {
       map[`${model.id}-${effort}`] = model.id
+      map[`${PROVIDER_ID}/${model.id}-${effort}`] = model.id
     }
   }
-  
+
   return map
 }
 
