@@ -11,7 +11,7 @@
       "model": "aicodewith/gpt-5.2"
     },
     "librarian": {
-      "model": "aicodewith/claude-sonnet-4-5-20250929"
+      "model": "aicodewith/claude-sonnet-4-6"
     },
     "explore": {
       "model": "aicodewith/claude-haiku-4-5-20251001"
@@ -29,7 +29,7 @@
       "model": "aicodewith/gpt-5.2"
     },
     "atlas": {
-      "model": "aicodewith/claude-sonnet-4-5-20250929"
+      "model": "aicodewith/claude-sonnet-4-6"
     },
     "build": {
       "model": "aicodewith/claude-opus-4-6-20260205"
@@ -70,10 +70,10 @@
       "model": "aicodewith/claude-haiku-4-5-20251001"
     },
     "unspecified-low": {
-      "model": "aicodewith/claude-sonnet-4-5-20250929"
+      "model": "aicodewith/claude-sonnet-4-6"
     },
     "unspecified-high": {
-      "model": "aicodewith/claude-sonnet-4-5-20250929"
+      "model": "aicodewith/claude-sonnet-4-6"
     },
     "writing": {
       "model": "aicodewith/gemini-3-pro"
