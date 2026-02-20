@@ -11,7 +11,7 @@
       "model": "aicodewith/gpt-5.2"
     },
     "librarian": {
-      "model": "aicodewith/claude-sonnet-4-6"
+      "model": "aicodewith/minimax-m2.5-free"
     },
     "explore": {
       "model": "aicodewith/claude-haiku-4-5-20251001"
