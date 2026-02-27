@@ -55,7 +55,7 @@
   },
   "categories": {
     "visual-engineering": {
-      "model": "aicodewith/gemini-3-pro"
+      "model": "aicodewith/gemini-3.1-pro-preview"
     },
     "ultrabrain": {
       "model": "aicodewith/gpt-5.3-codex"
@@ -64,7 +64,7 @@
       "model": "aicodewith/gpt-5.3-codex"
     },
     "artistry": {
-      "model": "aicodewith/gemini-3-pro"
+      "model": "aicodewith/gemini-3.1-pro-preview"
     },
     "quick": {
       "model": "aicodewith/claude-haiku-4-5-20251001"
