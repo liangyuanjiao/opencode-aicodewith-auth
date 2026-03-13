@@ -10,9 +10,6 @@
     "oracle": {
       "model": "aicodewith/gpt-5.4"
     },
-    "librarian": {
-      "model": "aicodewith/claude-sonnet-4-5-20250929"
-    },
     "explore": {
       "model": "aicodewith/claude-haiku-4-5-20251001"
     },
@@ -30,6 +27,9 @@
     },
     "atlas": {
       "model": "aicodewith/claude-sonnet-4-5-20250929"
+    },
+    "sisyphus-junior": {
+      "model": "aicodewith/claude-sonnet-4-6"
     },
     "build": {
       "model": "aicodewith/claude-opus-4-6-20260205"
