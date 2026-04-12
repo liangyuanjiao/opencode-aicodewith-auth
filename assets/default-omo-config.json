@@ -26,10 +26,10 @@
       "model": "aicodewith/gpt-5.4"
     },
     "atlas": {
-      "model": "aicodewith/claude-sonnet-4-6"
+      "model": "aicodewith/claude-sonnet-4.6"
     },
     "sisyphus-junior": {
-      "model": "aicodewith/claude-sonnet-4-6"
+      "model": "aicodewith/claude-sonnet-4.6"
     },
     "build": {
       "model": "aicodewith/claude-opus-4-6-20260205"
@@ -67,10 +67,10 @@
       "model": "aicodewith/gpt-5.4-mini"
     },
     "unspecified-low": {
-      "model": "aicodewith/claude-sonnet-4-6"
+      "model": "aicodewith/claude-sonnet-4.6"
     },
     "unspecified-high": {
-      "model": "aicodewith/claude-sonnet-4-6"
+      "model": "aicodewith/claude-sonnet-4.6"
     },
     "writing": {
       "model": "aicodewith/gemini-3-pro"
