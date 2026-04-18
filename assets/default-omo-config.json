@@ -2,7 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/dev/assets/oh-my-opencode.schema.json",
   "agents": {
     "sisyphus": {
-      "model": "aicodewith/claude-opus-4-6-20260205"
+      "model": "aicodewith/claude-opus-4-7"
     },
     "hephaestus": {
       "model": "aicodewith/gpt-5.4"
@@ -17,10 +17,10 @@
       "model": "aicodewith/gpt-5.4"
     },
     "prometheus": {
-      "model": "aicodewith/claude-opus-4-6-20260205"
+      "model": "aicodewith/claude-opus-4-7"
     },
     "metis": {
-      "model": "aicodewith/claude-opus-4-6-20260205"
+      "model": "aicodewith/claude-opus-4-7"
     },
     "momus": {
       "model": "aicodewith/gpt-5.4"
