@@ -10,8 +10,11 @@
     "oracle": {
       "model": "aicodewith/gpt-5.4"
     },
+    "librarian": {
+      "model": "aicodewith/gpt-5.4-mini-fast"
+    },
     "explore": {
-      "model": "aicodewith/claude-haiku-4-5-20251001"
+      "model": "aicodewith/gpt-5.4-mini-fast"
     },
     "multimodal-looker": {
       "model": "aicodewith/gpt-5.4"
