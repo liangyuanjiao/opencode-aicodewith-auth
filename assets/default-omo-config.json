@@ -5,10 +5,10 @@
       "model": "aicodewith/claude-opus-4-7"
     },
     "hephaestus": {
-      "model": "aicodewith/gpt-5.4"
+      "model": "aicodewith/gpt-5.5"
     },
     "oracle": {
-      "model": "aicodewith/gpt-5.4"
+      "model": "aicodewith/gpt-5.5"
     },
     "librarian": {
       "model": "aicodewith/gpt-5.4-mini-fast"
@@ -17,7 +17,7 @@
       "model": "aicodewith/gpt-5.4-mini-fast"
     },
     "multimodal-looker": {
-      "model": "aicodewith/gpt-5.4"
+      "model": "aicodewith/gpt-5.5"
     },
     "prometheus": {
       "model": "aicodewith/claude-opus-4-7"
@@ -26,7 +26,7 @@
       "model": "aicodewith/claude-opus-4-7"
     },
     "momus": {
-      "model": "aicodewith/gpt-5.4"
+      "model": "aicodewith/gpt-5.5"
     },
     "atlas": {
       "model": "aicodewith/claude-sonnet-4-6"
@@ -58,10 +58,10 @@
       "model": "aicodewith/gemini-3.1-pro-preview"
     },
     "ultrabrain": {
-      "model": "aicodewith/gpt-5.4"
+      "model": "aicodewith/gpt-5.5"
     },
     "deep": {
-      "model": "aicodewith/gpt-5.4"
+      "model": "aicodewith/gpt-5.5"
     },
     "artistry": {
       "model": "aicodewith/gemini-3.1-pro-preview"
